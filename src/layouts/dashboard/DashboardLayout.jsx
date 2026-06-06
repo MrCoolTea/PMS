@@ -25,17 +25,17 @@ import { ResortProvider } from '../../context/ResortContext.jsx';
 import '../../App.css';
 
 const navigationItems = [
-  { label: 'Overview', path: '/dashboard', icon: <SpaceDashboardRoundedIcon fontSize="small" /> },
-  { label: 'Rooms', path: '/dashboard/rooms', icon: <BedroomParentRoundedIcon fontSize="small" /> },
-  { label: 'Guests', path: '/dashboard/guests', icon: <GroupsRoundedIcon fontSize="small" /> },
-  { label: 'Reservations', path: '/dashboard/reservations', icon: <EventAvailableRoundedIcon fontSize="small" /> },
-  { label: 'Programs', path: '/dashboard/programs', icon: <EventRoundedIcon fontSize="small" /> },
-  { label: 'Payments', path: '/dashboard/payments', icon: <PaymentsRoundedIcon fontSize="small" /> },
-  { label: 'Marketing', path: '/dashboard/marketing', icon: <CampaignRoundedIcon fontSize="small" /> },
-  { label: 'Integrations', path: '/dashboard/integrations', icon: <HubRoundedIcon fontSize="small" /> },
-  { label: 'Files', path: '/dashboard/files', icon: <FolderRoundedIcon fontSize="small" /> },
-  { label: 'Reports', path: '/dashboard/reports', icon: <AssessmentRoundedIcon fontSize="small" /> },
-  { label: 'Settings', path: '/dashboard/settings', icon: <SettingsRoundedIcon fontSize="small" /> },
+  { label: 'Overview', path: '/admin', icon: <SpaceDashboardRoundedIcon fontSize="small" /> },
+  { label: 'Rooms', path: '/admin/rooms', icon: <BedroomParentRoundedIcon fontSize="small" /> },
+  { label: 'Guests', path: '/admin/guests', icon: <GroupsRoundedIcon fontSize="small" /> },
+  { label: 'Reservations', path: '/admin/reservations', icon: <EventAvailableRoundedIcon fontSize="small" /> },
+  { label: 'Programs', path: '/admin/programs', icon: <EventRoundedIcon fontSize="small" /> },
+  { label: 'Payments', path: '/admin/payments', icon: <PaymentsRoundedIcon fontSize="small" /> },
+  { label: 'Marketing', path: '/admin/marketing', icon: <CampaignRoundedIcon fontSize="small" /> },
+  { label: 'Integrations', path: '/admin/integrations', icon: <HubRoundedIcon fontSize="small" /> },
+  { label: 'Files', path: '/admin/files', icon: <FolderRoundedIcon fontSize="small" /> },
+  { label: 'Reports', path: '/admin/reports', icon: <AssessmentRoundedIcon fontSize="small" /> },
+  { label: 'Settings', path: '/admin/settings', icon: <SettingsRoundedIcon fontSize="small" /> },
 ];
 
 function DashboardFrame() {
@@ -43,12 +43,12 @@ function DashboardFrame() {
   const user = getStoredUser();
 
   if (!user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/admin/login" replace />;
   }
 
   function handleLogout() {
     logoutUser();
-    navigate('/');
+    navigate('/admin/login');
   }
 
   return (
@@ -73,7 +73,7 @@ function DashboardFrame() {
                 key={item.path}
                 component={NavLink}
                 to={item.path}
-                end={item.path === '/dashboard'}
+                end={item.path === '/admin'}
                 className={({ isActive }) =>
                   isActive ? 'nav-item nav-item-active' : 'nav-item'
                 }

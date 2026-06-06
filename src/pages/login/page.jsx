@@ -22,7 +22,7 @@ export function LoginPage() {
   const [error, setError] = useState('');
 
   if (isAuthenticated()) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/admin" replace />;
   }
 
   function handleSubmit(event) {
@@ -34,7 +34,7 @@ export function LoginPage() {
     }
 
     loginUser(email);
-    navigate('/dashboard');
+    navigate('/admin');
   }
 
   return (

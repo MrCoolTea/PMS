@@ -1,4 +1,8 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { Navigate, createBrowserRouter } from 'react-router-dom';
+import { PublicLayout } from './layouts/public/PublicLayout.jsx';
+import { HomePage } from './pages/public/HomePage.jsx';
+import { BookingPage } from './pages/public/BookingPage.jsx';
+import { ExperiencesPage } from './pages/public/ExperiencesPage.jsx';
 import { LoginPage } from './pages/login/page.jsx';
 import { DashboardLayout } from './layouts/dashboard/DashboardLayout.jsx';
 import { DashboardPage } from './pages/dashboard/page.jsx';
@@ -16,10 +20,19 @@ import { IntegrationsPage } from './pages/integrations/page.jsx';
 const router = createBrowserRouter([
   {
     path: '/',
+    element: <PublicLayout />,
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: 'book', element: <BookingPage /> },
+      { path: 'experiences', element: <ExperiencesPage /> },
+    ],
+  },
+  {
+    path: '/admin/login',
     element: <LoginPage />,
   },
   {
-    path: '/dashboard',
+    path: '/admin',
     element: <DashboardLayout />,
     children: [
       { index: true, element: <DashboardPage /> },
@@ -34,6 +47,10 @@ const router = createBrowserRouter([
       { path: 'reports', element: <ReportsPage /> },
       { path: 'settings', element: <SettingsPage /> },
     ],
+  },
+  {
+    path: '/dashboard',
+    element: <Navigate to="/admin" replace />,
   },
 ]);
 
