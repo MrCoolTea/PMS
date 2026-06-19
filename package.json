@@ -1,33 +1,21 @@
 {
-  "name": "pms",
+  "name": "pms-monorepo",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "workspaces": [
+    "PMS-FE",
+    "PMS-BE"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
-    "@mui/icons-material": "^9.0.0",
-    "@mui/lab": "^9.0.0-beta.2",
-    "@mui/material": "^9.0.0",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
-    "react-router-dom": "^7.14.2"
-  },
-  "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.1",
-    "eslint": "^10.2.1",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.2",
-    "globals": "^17.5.0",
-    "vite": "^8.0.10"
+    "fe:dev": "npm --prefix PMS-FE run dev",
+    "fe:build": "npm --prefix PMS-FE run build",
+    "fe:lint": "npm --prefix PMS-FE run lint",
+    "fe:preview": "npm --prefix PMS-FE run preview",
+    "be:dev": "npm --prefix PMS-BE run dev",
+    "be:build": "npm --prefix PMS-BE run build",
+    "be:start": "npm --prefix PMS-BE run start",
+    "be:prisma:generate": "npm --prefix PMS-BE run prisma:generate",
+    "be:prisma:migrate": "npm --prefix PMS-BE run prisma:migrate",
+    "build": "npm run fe:build && npm run be:build"
   }
 }
