@@ -1,7 +1,14 @@
+import oceanVilla101Image from '../assets/rooms/ocean-villa-101.png';
+import gardenSuite204Image from '../assets/rooms/garden-suite-204.png';
+import familyLoft302Image from '../assets/rooms/family-loft-302.png';
+import sunsetCabin405Image from '../assets/rooms/sunset-cabin-405.png';
+
 export const initialResortData = {
   resort: {
-    name: 'Azure Cove Resort',
-    location: 'El Nido, Palawan',
+    name: 'Paraiso sa gubat',
+    location: 'Tondol, Anda, Pangasinan',
+    phone: '+63 917 500 0123',
+    email: 'hello@paraisosagubat.com',
     tagline: 'Rooms, experiences, and channel bookings in one control center.',
   },
   rooms: [
@@ -14,6 +21,7 @@ export const initialResortData = {
       status: 'Occupied',
       floor: 'Beachfront',
       amenities: 'Private pool, breakfast, wifi',
+      image: oceanVilla101Image,
     },
     {
       id: 'room-2',
@@ -24,6 +32,7 @@ export const initialResortData = {
       status: 'Available',
       floor: 'Garden Wing',
       amenities: 'Balcony, wifi, minibar',
+      image: gardenSuite204Image,
     },
     {
       id: 'room-3',
@@ -34,6 +43,7 @@ export const initialResortData = {
       status: 'Reserved',
       floor: 'Lagoon Wing',
       amenities: 'Kitchenette, two beds, wifi',
+      image: familyLoft302Image,
     },
     {
       id: 'room-4',
@@ -44,6 +54,7 @@ export const initialResortData = {
       status: 'Maintenance',
       floor: 'Hilltop',
       amenities: 'Deck, queen bed, breakfast',
+      image: sunsetCabin405Image,
     },
   ],
   guests: [
@@ -177,14 +188,74 @@ export const initialResortData = {
       platform: 'Facebook',
       handle: 'Azure Cove Resort',
       url: 'https://facebook.com/azurecoveresort',
-      status: 'Active',
+      status: 'Ready',
+      accountName: 'Azure Cove Resort',
+      sync: 'Page connected',
+      audience: 'Families and local travel planners',
     },
     {
       id: 'soc-2',
       platform: 'Instagram',
       handle: '@azurecove',
       url: 'https://instagram.com/azurecove',
-      status: 'Active',
+      status: 'Ready',
+      accountName: '@azurecove',
+      sync: 'Business profile linked',
+      audience: 'Visual travel discovery',
+    },
+    {
+      id: 'soc-3',
+      platform: 'Twitter',
+      handle: '@azurecove',
+      url: 'https://twitter.com/azurecove',
+      status: 'Needs Auth',
+      accountName: '@azurecove',
+      sync: 'Token not configured',
+      audience: 'Announcements and support',
+    },
+    {
+      id: 'soc-4',
+      platform: 'Threads',
+      handle: '@azurecove',
+      url: 'https://threads.net/@azurecove',
+      status: 'Needs Auth',
+      accountName: '@azurecove',
+      sync: 'Meta publishing access pending',
+      audience: 'Lifestyle conversations',
+    },
+    {
+      id: 'soc-5',
+      platform: 'TikTok',
+      handle: '@azurecove.stays',
+      url: 'https://tiktok.com/@azurecove.stays',
+      status: 'Ready',
+      accountName: '@azurecove.stays',
+      sync: 'Creator account prepared',
+      audience: 'Short-form resort highlights',
+    },
+  ],
+  posts: [
+    {
+      id: 'post-1',
+      title: 'Sunset villa push',
+      caption:
+        'Golden hour at Azure Cove. Book an ocean-facing villa this weekend and wake up steps from the shore.',
+      platforms: ['Facebook', 'Instagram', 'Threads'],
+      mediaUrl: oceanVilla101Image,
+      publishAt: '2026-06-12 18:00',
+      status: 'Scheduled',
+      cta: 'Book now',
+    },
+    {
+      id: 'post-2',
+      title: 'Family loft feature',
+      caption:
+        'Need extra space for the whole crew? Our Family Loft gives you room to spread out without losing the view.',
+      platforms: ['Instagram', 'TikTok'],
+      mediaUrl: familyLoft302Image,
+      publishAt: '2026-06-13 10:00',
+      status: 'Draft',
+      cta: 'View rooms',
     },
   ],
   integrations: [
@@ -253,7 +324,7 @@ export const initialResortData = {
     },
   ],
   settings: {
-    resortName: 'Azure Cove Resort',
+    resortName: 'Paraiso sa gubat',
     currency: 'USD',
     timezone: 'Asia/Manila',
     checkInTime: '14:00',

@@ -7,6 +7,7 @@ import {
   Paper,
   Stack,
   Typography,
+  useTheme,
 } from '@mui/material';
 import VillaRoundedIcon from '@mui/icons-material/VillaRounded';
 import SpaceDashboardRoundedIcon from '@mui/icons-material/SpaceDashboardRounded';
@@ -22,7 +23,7 @@ import AssessmentRoundedIcon from '@mui/icons-material/AssessmentRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import { getStoredUser, logoutUser } from '../../lib/auth.js';
 import { ResortProvider } from '../../context/ResortContext.jsx';
-import '../../App.css';
+import { ui } from '../../styles/ui.js';
 
 const navigationItems = [
   { label: 'Overview', path: '/admin', icon: <SpaceDashboardRoundedIcon fontSize="small" /> },
@@ -39,6 +40,7 @@ const navigationItems = [
 ];
 
 function DashboardFrame() {
+  const theme = useTheme();
   const navigate = useNavigate();
   const user = getStoredUser();
 
@@ -52,31 +54,29 @@ function DashboardFrame() {
   }
 
   return (
-    <Box className="dashboard-shell">
-      <Paper component="aside" className="dashboard-sidebar" elevation={0}>
+    <Box sx={ui.dashboardShell}>
+      <Paper component="aside" sx={ui.dashboardSidebar} elevation={0}>
         <Stack spacing={3} sx={{ height: '100%' }}>
           <Stack direction="row" spacing={1.5} alignItems="center">
-            <Avatar className="brand-avatar">
+            <Avatar sx={ui.brandAvatar}>
               <VillaRoundedIcon />
             </Avatar>
             <Box>
-              <Typography className="sidebar-brand">Resort Desk</Typography>
-              <Typography className="sidebar-subtitle">
+              <Typography sx={ui.sidebarBrand}>Resort Desk</Typography>
+              <Typography sx={ui.sidebarSubtitle}>
                 Rooms, bookings, programs, and channels
               </Typography>
             </Box>
           </Stack>
 
-          <Stack spacing={1} className="nav-stack">
+          <Stack spacing={1} sx={ui.navStack}>
             {navigationItems.map((item) => (
               <Box
                 key={item.path}
                 component={NavLink}
                 to={item.path}
                 end={item.path === '/admin'}
-                className={({ isActive }) =>
-                  isActive ? 'nav-item nav-item-active' : 'nav-item'
-                }
+                style={({ isActive }) => ui.navItem(theme, isActive)}
               >
                 {item.icon}
                 <Typography>{item.label}</Typography>
@@ -84,16 +84,16 @@ function DashboardFrame() {
             ))}
           </Stack>
 
-          <Box className="sidebar-spacer" />
+          <Box sx={ui.sidebarSpacer} />
 
           <Divider />
 
           <Stack spacing={1.5}>
-            <Typography className="sidebar-section">Signed in as</Typography>
-            <Box className="user-card">
-              <Typography className="user-name">{user.name}</Typography>
-              <Typography className="user-role">Resort Admin</Typography>
-              <Typography className="user-email">{user.email}</Typography>
+            <Typography sx={ui.sidebarSection}>Signed in as</Typography>
+            <Box sx={ui.userCard}>
+              <Typography sx={ui.userName}>{user.name}</Typography>
+              <Typography sx={ui.userRole}>Resort Admin</Typography>
+              <Typography sx={ui.userEmail}>{user.email}</Typography>
             </Box>
             <Button variant="outlined" onClick={handleLogout}>
               Logout
@@ -102,7 +102,7 @@ function DashboardFrame() {
         </Stack>
       </Paper>
 
-      <Box component="main" className="dashboard-main">
+      <Box component="main" sx={ui.dashboardMain}>
         <Outlet />
       </Box>
     </Box>

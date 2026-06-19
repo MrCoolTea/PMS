@@ -14,7 +14,7 @@ import HubRoundedIcon from '@mui/icons-material/HubRounded';
 import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
 import EventAvailableRoundedIcon from '@mui/icons-material/EventAvailableRounded';
 import { useResort } from '../../context/ResortContext.jsx';
-import '../../App.css';
+import { ui } from '../../styles/ui.js';
 
 export function DashboardPage() {
   const { data } = useResort();
@@ -70,56 +70,56 @@ export function DashboardPage() {
 
   return (
     <Stack spacing={3}>
-      <Paper className="hero-panel" elevation={0}>
+      <Paper sx={ui.heroPanel} elevation={0}>
         <Stack direction={{ xs: 'column', md: 'row' }} justifyContent="space-between" spacing={2}>
           <Box>
-            <Typography className="eyebrow">Overview</Typography>
-            <Typography variant="h3" className="hero-title">
+            <Typography sx={ui.eyebrow}>Overview</Typography>
+            <Typography variant="h3" sx={ui.heroTitle}>
               Resort operations at a glance
             </Typography>
-            <Typography className="hero-copy">
+            <Typography sx={ui.heroCopy}>
               Manage rooms, reservations, guest activities, payment tracking,
               social channels, and OTA integrations from one frontend control
               center.
             </Typography>
           </Box>
 
-          <Box className="progress-card">
-            <Typography className="progress-label">Room occupancy</Typography>
+          <Box sx={ui.progressCard}>
+            <Typography sx={ui.progressLabel}>Room occupancy</Typography>
             <Typography variant="h4">{occupancyRate}%</Typography>
             <LinearProgress
               variant="determinate"
               value={occupancyRate}
-              className="collection-progress"
+              sx={ui.collectionProgress}
             />
-            <Typography className="progress-subtext">
+            <Typography sx={ui.progressSubtext}>
               {occupiedRooms} occupied, {availableRooms} available
             </Typography>
           </Box>
         </Stack>
       </Paper>
 
-      <Box className="stats-grid stats-grid-wide">
+      <Box sx={ui.statsGrid(6)}>
         {statCards.map((card) => (
-          <Paper key={card.title} className="stat-card" elevation={0}>
-            <Box className="stat-icon">{card.icon}</Box>
-            <Typography className="stat-title">{card.title}</Typography>
-            <Typography variant="h4" className="stat-value">
+          <Paper key={card.title} sx={ui.statCard} elevation={0}>
+            <Box sx={ui.statIcon}>{card.icon}</Box>
+            <Typography sx={ui.statTitle}>{card.title}</Typography>
+            <Typography variant="h4" sx={ui.statValue}>
               {card.value}
             </Typography>
-            <Typography className="stat-note">{card.note}</Typography>
+            <Typography sx={ui.statNote}>{card.note}</Typography>
           </Paper>
         ))}
       </Box>
 
-      <Box className="dashboard-grid dashboard-grid-overview">
-        <Paper className="content-panel" elevation={0}>
+      <Box sx={ui.dashboardGrid(true)}>
+        <Paper sx={ui.contentPanel} elevation={0}>
           <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" spacing={1} sx={{ mb: 2 }}>
             <Box>
-              <Typography variant="h5" className="panel-title">
+              <Typography variant="h5" sx={ui.panelTitle}>
                 Reservations and Rooms
               </Typography>
-              <Typography className="panel-copy">
+              <Typography sx={ui.panelCopy}>
                 Current stay flow across the resort
               </Typography>
             </Box>
@@ -128,16 +128,16 @@ export function DashboardPage() {
 
           <Stack divider={<Divider flexItem />} spacing={0}>
             {data.reservations.map((reservation) => (
-              <Box key={reservation.id} className="property-row">
+              <Box key={reservation.id} sx={ui.propertyRow}>
                 <Box>
-                  <Typography className="row-title">{reservation.guest}</Typography>
-                  <Typography className="row-copy">
+                  <Typography sx={ui.rowTitle}>{reservation.guest}</Typography>
+                  <Typography sx={ui.rowCopy}>
                     {reservation.room} • {reservation.checkIn} to {reservation.checkOut}
                   </Typography>
                 </Box>
-                <Box className="row-meta">
-                  <Typography className="row-strong">${reservation.total}</Typography>
-                  <Typography className="row-copy">
+                <Box sx={ui.rowMeta}>
+                  <Typography sx={ui.rowStrong}>${reservation.total}</Typography>
+                  <Typography sx={ui.rowCopy}>
                     {reservation.source} • {reservation.status}
                   </Typography>
                 </Box>
@@ -146,20 +146,20 @@ export function DashboardPage() {
           </Stack>
         </Paper>
 
-        <Paper className="content-panel" elevation={0}>
-          <Typography variant="h5" className="panel-title">
+        <Paper sx={ui.contentPanel} elevation={0}>
+          <Typography variant="h5" sx={ui.panelTitle}>
             Resort Queue
           </Typography>
-          <Typography className="panel-copy">
+          <Typography sx={ui.panelCopy}>
             Programs, channels, and marketing items
           </Typography>
 
           <Stack spacing={1.5} sx={{ mt: 2.5 }}>
             {data.programs.slice(0, 2).map((program) => (
-              <Box key={program.id} className="task-card">
+              <Box key={program.id} sx={ui.taskCard}>
                 <Box>
-                  <Typography className="row-title">{program.title}</Typography>
-                  <Typography className="row-copy">
+                  <Typography sx={ui.rowTitle}>{program.title}</Typography>
+                  <Typography sx={ui.rowCopy}>
                     {program.schedule} • {program.venue}
                   </Typography>
                 </Box>
@@ -168,10 +168,10 @@ export function DashboardPage() {
             ))}
 
             {data.integrations.slice(0, 3).map((integration) => (
-              <Box key={integration.id} className="task-card">
+              <Box key={integration.id} sx={ui.taskCard}>
                 <Box>
-                  <Typography className="row-title">{integration.platform}</Typography>
-                  <Typography className="row-copy">{integration.notes}</Typography>
+                  <Typography sx={ui.rowTitle}>{integration.platform}</Typography>
+                  <Typography sx={ui.rowCopy}>{integration.notes}</Typography>
                 </Box>
                 <Chip label={integration.status} variant="outlined" />
               </Box>

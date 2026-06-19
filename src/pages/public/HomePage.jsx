@@ -1,7 +1,7 @@
 import { Box, Button, Chip, Paper, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useResort } from '../../context/ResortContext.jsx';
-import '../../App.css';
+import { ui } from '../../styles/ui.js';
 
 export function HomePage() {
   const { data } = useResort();
@@ -10,12 +10,12 @@ export function HomePage() {
 
   return (
     <Stack spacing={3}>
-      <Paper className="public-hero" elevation={0}>
-        <Typography className="eyebrow">{data.resort.location}</Typography>
-        <Typography variant="h1" className="public-title">
+      <Paper sx={ui.publicHero()} elevation={0}>
+        <Typography sx={ui.eyebrow}>{data.resort.location}</Typography>
+        <Typography variant="h1" sx={ui.publicTitle}>
           Escape to {data.resort.name}
         </Typography>
-        <Typography className="public-copy">
+        <Typography sx={ui.publicCopy}>
           Beachfront villas, curated experiences, and direct online booking from one
           resort website.
         </Typography>
@@ -29,39 +29,39 @@ export function HomePage() {
         </Stack>
       </Paper>
 
-      <Box className="stats-grid stats-grid-compact">
-        <Paper className="stat-card" elevation={0}>
-          <Typography className="stat-title">Room Types</Typography>
-          <Typography variant="h4" className="stat-value">
+      <Box sx={ui.statsGrid(2)}>
+        <Paper sx={ui.statCard} elevation={0}>
+          <Typography sx={ui.statTitle}>Room Types</Typography>
+          <Typography variant="h4" sx={ui.statValue}>
             {new Set(data.rooms.map((room) => room.type)).size}
           </Typography>
-          <Typography className="stat-note">Villas, suites, lofts, and cabins</Typography>
+          <Typography sx={ui.statNote}>Villas, suites, lofts, and cabins</Typography>
         </Paper>
-        <Paper className="stat-card" elevation={0}>
-          <Typography className="stat-title">Scheduled Experiences</Typography>
-          <Typography variant="h4" className="stat-value">
+        <Paper sx={ui.statCard} elevation={0}>
+          <Typography sx={ui.statTitle}>Scheduled Experiences</Typography>
+          <Typography variant="h4" sx={ui.statValue}>
             {data.programs.filter((program) => program.status === 'Scheduled').length}
           </Typography>
-          <Typography className="stat-note">Daily guest activities available</Typography>
+          <Typography sx={ui.statNote}>Daily guest activities available</Typography>
         </Paper>
       </Box>
 
-      <Box className="dashboard-grid">
-        <Paper className="content-panel" elevation={0}>
-          <Typography variant="h4" className="panel-title">
+      <Box sx={ui.dashboardGrid()}>
+        <Paper sx={ui.contentPanel} elevation={0}>
+          <Typography variant="h4" sx={ui.panelTitle}>
             Featured Rooms
           </Typography>
           <Stack spacing={1.5} sx={{ mt: 2.5 }}>
             {featuredRooms.map((room) => (
-              <Box key={room.id} className="record-card">
+              <Box key={room.id} sx={ui.recordCard}>
                 <Box>
-                  <Typography className="row-title">{room.name}</Typography>
-                  <Typography className="row-copy">
+                  <Typography sx={ui.rowTitle}>{room.name}</Typography>
+                  <Typography sx={ui.rowCopy}>
                     {room.type} • {room.capacity} guests • {room.amenities}
                   </Typography>
                 </Box>
                 <Stack alignItems="flex-end" spacing={1}>
-                  <Typography className="row-strong">${room.rate}/night</Typography>
+                  <Typography sx={ui.rowStrong}>${room.rate}/night</Typography>
                   <Chip label={room.status} variant="outlined" />
                 </Stack>
               </Box>
@@ -69,19 +69,19 @@ export function HomePage() {
           </Stack>
         </Paper>
 
-        <Paper className="content-panel" elevation={0}>
-          <Typography variant="h4" className="panel-title">
+        <Paper sx={ui.contentPanel} elevation={0}>
+          <Typography variant="h4" sx={ui.panelTitle}>
             Follow the Resort
           </Typography>
-          <Typography className="panel-copy">
+          <Typography sx={ui.panelCopy}>
             Social channels configured in your admin frontend can also surface here.
           </Typography>
           <Stack spacing={1.5} sx={{ mt: 2.5 }}>
             {social.map((account) => (
-              <Box key={account.id} className="task-card">
+              <Box key={account.id} sx={ui.taskCard}>
                 <Box>
-                  <Typography className="row-title">{account.platform}</Typography>
-                  <Typography className="row-copy">{account.handle}</Typography>
+                  <Typography sx={ui.rowTitle}>{account.platform}</Typography>
+                  <Typography sx={ui.rowCopy}>{account.handle}</Typography>
                 </Box>
                 <Chip label="Live" color="success" variant="outlined" />
               </Box>

@@ -40,11 +40,19 @@
   font-weight: 700;
 }
 
+.site-brand-location {
+  color: #5b6f68;
+  font-size: 0.82rem;
+}
+
 .site-nav {
   align-items: center;
 }
 
 .site-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   color: #29493e;
   font-weight: 600;
 }
@@ -53,6 +61,57 @@
   max-width: 1180px;
   margin: 0 auto;
   padding: 28px;
+}
+
+.site-footer {
+  margin-top: 32px;
+  padding: 28px 32px 32px;
+  border-top: 1px solid rgba(20, 55, 44, 0.08);
+  background:
+    linear-gradient(135deg, rgba(22, 51, 41, 0.96), rgba(35, 77, 61, 0.96)),
+    rgba(18, 38, 32, 0.96);
+}
+
+.site-footer-inner {
+  width: 100%;
+  color: #f4f8f5;
+}
+
+.site-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.site-footer-card {
+  padding: 4px 0;
+}
+
+.site-footer-heading {
+  font-weight: 700;
+  color: #f4f8f5;
+}
+
+.site-footer-copy,
+.site-footer-note {
+  color: rgba(244, 248, 245, 0.76);
+}
+
+.site-footer-note {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(244, 248, 245, 0.12);
+}
+
+.footer-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(244, 248, 245, 0.88) !important;
+}
+
+.footer-icon-top {
+  margin-top: 2px;
 }
 
 .public-hero {
@@ -91,6 +150,33 @@
   border: 1px solid rgba(20, 55, 44, 0.08);
   background: rgba(255, 255, 255, 0.86);
   backdrop-filter: blur(18px);
+}
+
+.login-eyebrow-pill {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(91, 95, 239, 0.14);
+  box-shadow: 0 10px 24px rgba(91, 95, 239, 0.08);
+}
+
+.login-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.login-preview-item {
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(145, 158, 171, 0.18);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
 }
 
 .eyebrow {
@@ -279,6 +365,30 @@
   grid-template-columns: 1.2fr 0.8fr;
 }
 
+.platform-chip-group,
+.platform-tag-row,
+.marketing-post-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.platform-chip-button {
+  text-transform: none !important;
+}
+
+.marketing-post-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.rooms-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 18px;
+}
+
 .property-row,
 .task-card,
 .record-card {
@@ -296,12 +406,43 @@
   align-items: flex-start;
 }
 
+.room-card {
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.marketing-post-card {
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.room-card-main {
+  display: grid;
+  gap: 10px;
+}
+
+.room-card-image,
+.room-form-preview {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid rgba(20, 55, 44, 0.08);
+}
+
 .row-meta {
   text-align: right;
 }
 
 @media (max-width: 1280px) {
   .stats-grid-wide {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .marketing-post-grid,
+  .rooms-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
@@ -318,6 +459,14 @@
     grid-template-columns: 1fr;
   }
 
+  .site-footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .login-preview-grid {
+    grid-template-columns: 1fr;
+  }
+
   .login-shell,
   .dashboard-main {
     padding: 20px;
@@ -330,11 +479,17 @@
   .site-main {
     padding: 20px;
   }
+
+  .marketing-post-grid,
+  .rooms-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 640px) {
   .site-header,
   .site-main,
+  .site-footer,
   .public-hero,
   .login-shell,
   .login-card,
@@ -358,7 +513,16 @@
     text-align: left;
   }
 
+  .site-footer-grid {
+    grid-template-columns: 1fr;
+  }
+
   .site-header {
     align-items: flex-start;
+  }
+
+  .marketing-post-grid,
+  .rooms-grid {
+    grid-template-columns: 1fr;
   }
 }
