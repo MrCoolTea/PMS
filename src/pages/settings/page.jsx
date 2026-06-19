@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useResort } from '../../context/ResortContext.jsx';
-import '../../App.css';
+import { ui } from '../../styles/ui.js';
 
 export function SettingsPage() {
   const { data, updateSettings } = useResort();
@@ -30,18 +30,18 @@ export function SettingsPage() {
 
   return (
     <Stack spacing={3}>
-      <Paper className="hero-panel" elevation={0}>
-        <Typography className="eyebrow">Settings</Typography>
-        <Typography variant="h3" className="hero-title">
+      <Paper sx={ui.heroPanel} elevation={0}>
+        <Typography sx={ui.eyebrow}>Settings</Typography>
+        <Typography variant="h3" sx={ui.heroTitle}>
           Resort operations configuration
         </Typography>
-        <Typography className="hero-copy">
+        <Typography sx={ui.heroCopy}>
           Configure check-in rules, timezone, currency, and guest notification behavior.
         </Typography>
       </Paper>
 
-      <Paper className="content-panel" elevation={0}>
-        <Typography variant="h5" className="panel-title">
+      <Paper sx={ui.contentPanel} elevation={0}>
+        <Typography variant="h5" sx={ui.panelTitle}>
           System Settings
         </Typography>
         <Stack component="form" spacing={2} sx={{ mt: 2.5, maxWidth: 720 }} onSubmit={handleSubmit}>

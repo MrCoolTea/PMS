@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useResort } from '../../context/ResortContext.jsx';
-import '../../App.css';
+import { ui } from '../../styles/ui.js';
 
 function integrationColor(status) {
   if (status === 'Connected') {
@@ -48,31 +48,31 @@ export function IntegrationsPage() {
 
   return (
     <Stack spacing={3}>
-      <Paper className="hero-panel" elevation={0}>
-        <Typography className="eyebrow">Integrations</Typography>
-        <Typography variant="h3" className="hero-title">
+      <Paper sx={ui.heroPanel} elevation={0}>
+        <Typography sx={ui.eyebrow}>Integrations</Typography>
+        <Typography variant="h3" sx={ui.heroTitle}>
           Booking channels and metasearch setup
         </Typography>
-        <Typography className="hero-copy">
+        <Typography sx={ui.heroCopy}>
           Track OTA and metasearch integrations like Booking.com, Agoda, Expedia,
           Airbnb, and Trivago before wiring in the real backend sync.
         </Typography>
       </Paper>
 
-      <Box className="dashboard-grid">
-        <Paper className="content-panel" elevation={0}>
-          <Typography variant="h5" className="panel-title">
+      <Box sx={ui.dashboardGrid()}>
+        <Paper sx={ui.contentPanel} elevation={0}>
+          <Typography variant="h5" sx={ui.panelTitle}>
             Connected Channels
           </Typography>
           <Stack spacing={1.5} sx={{ mt: 2.5 }}>
             {data.integrations.map((integration) => (
-              <Box key={integration.id} className="record-card">
+              <Box key={integration.id} sx={ui.recordCard}>
                 <Box>
-                  <Typography className="row-title">{integration.platform}</Typography>
-                  <Typography className="row-copy">
+                  <Typography sx={ui.rowTitle}>{integration.platform}</Typography>
+                  <Typography sx={ui.rowCopy}>
                     {integration.category} • Last sync: {integration.sync}
                   </Typography>
-                  <Typography className="row-copy">{integration.notes}</Typography>
+                  <Typography sx={ui.rowCopy}>{integration.notes}</Typography>
                 </Box>
                 <Chip
                   label={integration.status}
@@ -84,8 +84,8 @@ export function IntegrationsPage() {
           </Stack>
         </Paper>
 
-        <Paper className="content-panel" elevation={0}>
-          <Typography variant="h5" className="panel-title">
+        <Paper sx={ui.contentPanel} elevation={0}>
+          <Typography variant="h5" sx={ui.panelTitle}>
             Add Integration
           </Typography>
           <Stack component="form" spacing={2} sx={{ mt: 2.5 }} onSubmit={handleSubmit}>

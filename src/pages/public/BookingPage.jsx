@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Box, Button, Paper, Stack, TextField, Typography } from '@mui/material';
 import { useResort } from '../../context/ResortContext.jsx';
-import '../../App.css';
+import { ui } from '../../styles/ui.js';
 
 export function BookingPage() {
   const { data } = useResort();
@@ -22,18 +22,18 @@ export function BookingPage() {
 
   return (
     <Stack spacing={3}>
-      <Paper className="public-hero public-hero-booking" elevation={0}>
-        <Typography className="eyebrow">Direct Booking</Typography>
-        <Typography variant="h2" className="public-title">
+      <Paper sx={ui.publicHero(true)} elevation={0}>
+        <Typography sx={ui.eyebrow}>Direct Booking</Typography>
+        <Typography variant="h2" sx={ui.publicTitle}>
           Search dates and choose your stay
         </Typography>
-        <Typography className="public-copy">
+        <Typography sx={ui.publicCopy}>
           This frontend booking page is ready to connect to your real availability,
           pricing, and payment backend later.
         </Typography>
       </Paper>
 
-      <Paper className="content-panel" elevation={0}>
+      <Paper sx={ui.contentPanel} elevation={0}>
         <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
           <TextField
             label="Check In"
@@ -67,21 +67,21 @@ export function BookingPage() {
         </Stack>
       </Paper>
 
-      <Paper className="content-panel" elevation={0}>
-        <Typography variant="h4" className="panel-title">
+      <Paper sx={ui.contentPanel} elevation={0}>
+        <Typography variant="h4" sx={ui.panelTitle}>
           Available Options
         </Typography>
         <Stack spacing={1.5} sx={{ mt: 2.5 }}>
           {availableRooms.map((room) => (
-            <Box key={room.id} className="record-card">
+            <Box key={room.id} sx={ui.recordCard}>
               <Box>
-                <Typography className="row-title">{room.name}</Typography>
-                <Typography className="row-copy">
+                <Typography sx={ui.rowTitle}>{room.name}</Typography>
+                <Typography sx={ui.rowCopy}>
                   {room.type} • Sleeps {room.capacity} • {room.amenities}
                 </Typography>
               </Box>
               <Stack alignItems="flex-end" spacing={1}>
-                <Typography className="row-strong">${room.rate}/night</Typography>
+                <Typography sx={ui.rowStrong}>${room.rate}/night</Typography>
                 <Button variant="outlined">Select Room</Button>
               </Stack>
             </Box>

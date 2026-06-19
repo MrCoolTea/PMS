@@ -3,6 +3,8 @@ import { initialResortData } from '../data/resortData.js';
 
 const STORAGE_KEY = 'resort-frontend-data';
 const ResortContext = createContext(null);
+const LEGACY_RESORT_NAME = 'Azure Cove Resort';
+const LEGACY_RESORT_LOCATION = 'El Nido, Palawan';
 
 function readStoredData() {
   if (typeof window === 'undefined') {
@@ -16,7 +18,56 @@ function readStoredData() {
   }
 
   try {
-    return JSON.parse(raw);
+    const storedData = JSON.parse(raw);
+    const initialRoomsById = new Map(
+      initialResortData.rooms.map((room) => [room.id, room])
+    );
+    const initialSocialByPlatform = new Map(
+      initialResortData.socialMedia.map((account) => [account.platform, account])
+    );
+    const storedResort = storedData.resort ?? {};
+    const storedSettings = storedData.settings ?? {};
+    const shouldMigrateResortName =
+      !storedResort.name || storedResort.name === LEGACY_RESORT_NAME;
+    const shouldMigrateResortLocation =
+      !storedResort.location || storedResort.location === LEGACY_RESORT_LOCATION;
+    const shouldMigrateSettingsResortName =
+      !storedSettings.resortName || storedSettings.resortName === LEGACY_RESORT_NAME;
+
+    return {
+      ...initialResortData,
+      ...storedData,
+      resort: {
+        ...initialResortData.resort,
+        ...storedResort,
+        ...(shouldMigrateResortName ? { name: initialResortData.resort.name } : {}),
+        ...(shouldMigrateResortLocation ? { location: initialResortData.resort.location } : {}),
+      },
+      rooms: (storedData.rooms ?? initialResortData.rooms).map((room) => ({
+        ...initialRoomsById.get(room.id),
+        ...room,
+        image: room.image ?? initialRoomsById.get(room.id)?.image ?? '',
+      })),
+      socialMedia: [
+        ...(storedData.socialMedia ?? []).map((account) => ({
+          ...initialSocialByPlatform.get(account.platform),
+          ...account,
+        })),
+        ...initialResortData.socialMedia.filter(
+          (account) =>
+            !(storedData.socialMedia ?? []).some(
+              (storedAccount) => storedAccount.platform === account.platform
+            )
+        ),
+      ],
+      settings: {
+        ...initialResortData.settings,
+        ...storedSettings,
+        ...(shouldMigrateSettingsResortName
+          ? { resortName: initialResortData.settings.resortName }
+          : {}),
+      },
+    };
   } catch {
     return initialResortData;
   }
@@ -87,8 +138,23 @@ export function ResortProvider({ children }) {
       setData((current) => ({
         ...current,
         socialMedia: [
-          { id: createId('soc'), status: 'Active', ...account },
+          { id: createId('soc'), status: 'Ready', sync: 'Ready to publish', ...account },
           ...current.socialMedia,
+        ],
+      }));
+    }
+
+    function addPost(post) {
+      setData((current) => ({
+        ...current,
+        posts: [
+          {
+            id: createId('post'),
+            status: 'Draft',
+            publishAt: new Date().toISOString().slice(0, 16).replace('T', ' '),
+            ...post,
+          },
+          ...(current.posts ?? []),
         ],
       }));
     }
@@ -133,6 +199,7 @@ export function ResortProvider({ children }) {
       addProgram,
       recordPayment,
       addSocialMedia,
+      addPost,
       addIntegration,
       addFile,
       updateSettings,

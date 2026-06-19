@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useResort } from '../../context/ResortContext.jsx';
-import '../../App.css';
+import { ui } from '../../styles/ui.js';
 
 export function FilesPage() {
   const { data, addFile } = useResort();
@@ -35,28 +35,28 @@ export function FilesPage() {
 
   return (
     <Stack spacing={3}>
-      <Paper className="hero-panel" elevation={0}>
-        <Typography className="eyebrow">Files</Typography>
-        <Typography variant="h3" className="hero-title">
+      <Paper sx={ui.heroPanel} elevation={0}>
+        <Typography sx={ui.eyebrow}>Files</Typography>
+        <Typography variant="h3" sx={ui.heroTitle}>
           Resort docs, rate sheets, and vendor references
         </Typography>
-        <Typography className="hero-copy">
+        <Typography sx={ui.heroCopy}>
           Store frontend records for operations, guest services, finance, and
           marketing assets.
         </Typography>
       </Paper>
 
-      <Box className="dashboard-grid">
-        <Paper className="content-panel" elevation={0}>
-          <Typography variant="h5" className="panel-title">
+      <Box sx={ui.dashboardGrid()}>
+        <Paper sx={ui.contentPanel} elevation={0}>
+          <Typography variant="h5" sx={ui.panelTitle}>
             File Library
           </Typography>
           <Stack spacing={1.5} sx={{ mt: 2.5 }}>
             {data.files.map((file) => (
-              <Box key={file.id} className="record-card">
+              <Box key={file.id} sx={ui.recordCard}>
                 <Box>
-                  <Typography className="row-title">{file.name}</Typography>
-                  <Typography className="row-copy">
+                  <Typography sx={ui.rowTitle}>{file.name}</Typography>
+                  <Typography sx={ui.rowCopy}>
                     {file.area} • Updated {file.updatedAt}
                   </Typography>
                 </Box>
@@ -66,8 +66,8 @@ export function FilesPage() {
           </Stack>
         </Paper>
 
-        <Paper className="content-panel" elevation={0}>
-          <Typography variant="h5" className="panel-title">
+        <Paper sx={ui.contentPanel} elevation={0}>
+          <Typography variant="h5" sx={ui.panelTitle}>
             Add File Record
           </Typography>
           <Stack component="form" spacing={2} sx={{ mt: 2.5 }} onSubmit={handleSubmit}>

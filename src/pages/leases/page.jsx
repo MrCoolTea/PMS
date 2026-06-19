@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useResort } from '../../context/ResortContext.jsx';
-import '../../App.css';
+import { ui } from '../../styles/ui.js';
 
 function reservationColor(status) {
   if (status === 'Checked In') return 'success';
@@ -50,33 +50,33 @@ export function ReservationsPage() {
 
   return (
     <Stack spacing={3}>
-      <Paper className="hero-panel" elevation={0}>
-        <Typography className="eyebrow">Reservations</Typography>
-        <Typography variant="h3" className="hero-title">
+      <Paper sx={ui.heroPanel} elevation={0}>
+        <Typography sx={ui.eyebrow}>Reservations</Typography>
+        <Typography variant="h3" sx={ui.heroTitle}>
           Stays, arrivals, and booking sources
         </Typography>
-        <Typography className="hero-copy">
+        <Typography sx={ui.heroCopy}>
           Track direct and OTA reservations, room assignments, check-in dates, and
           booking totals.
         </Typography>
       </Paper>
 
-      <Box className="dashboard-grid">
-        <Paper className="content-panel" elevation={0}>
-          <Typography variant="h5" className="panel-title">
+      <Box sx={ui.dashboardGrid()}>
+        <Paper sx={ui.contentPanel} elevation={0}>
+          <Typography variant="h5" sx={ui.panelTitle}>
             Reservation Board
           </Typography>
           <Stack spacing={1.5} sx={{ mt: 2.5 }}>
             {data.reservations.map((reservation) => (
-              <Box key={reservation.id} className="record-card">
+              <Box key={reservation.id} sx={ui.recordCard}>
                 <Box>
-                  <Typography className="row-title">
+                  <Typography sx={ui.rowTitle}>
                     {reservation.guest} • {reservation.room}
                   </Typography>
-                  <Typography className="row-copy">
+                  <Typography sx={ui.rowCopy}>
                     {reservation.checkIn} to {reservation.checkOut}
                   </Typography>
-                  <Typography className="row-copy">
+                  <Typography sx={ui.rowCopy}>
                     {reservation.source} • ${reservation.total}
                   </Typography>
                 </Box>
@@ -86,8 +86,8 @@ export function ReservationsPage() {
           </Stack>
         </Paper>
 
-        <Paper className="content-panel" elevation={0}>
-          <Typography variant="h5" className="panel-title">
+        <Paper sx={ui.contentPanel} elevation={0}>
+          <Typography variant="h5" sx={ui.panelTitle}>
             Create Reservation
           </Typography>
           <Stack component="form" spacing={2} sx={{ mt: 2.5 }} onSubmit={handleSubmit}>

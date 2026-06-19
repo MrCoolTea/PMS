@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useResort } from '../../context/ResortContext.jsx';
-import '../../App.css';
+import { ui } from '../../styles/ui.js';
 
 function guestColor(vip) {
   if (vip === 'VIP') return 'warning';
@@ -45,31 +45,31 @@ export function GuestsPage() {
 
   return (
     <Stack spacing={3}>
-      <Paper className="hero-panel" elevation={0}>
-        <Typography className="eyebrow">Guests</Typography>
-        <Typography variant="h3" className="hero-title">
+      <Paper sx={ui.heroPanel} elevation={0}>
+        <Typography sx={ui.eyebrow}>Guests</Typography>
+        <Typography variant="h3" sx={ui.heroTitle}>
           Guest profiles and stay preferences
         </Typography>
-        <Typography className="hero-copy">
+        <Typography sx={ui.heroCopy}>
           Keep a clean guest list with contact details, nationality, loyalty status,
           and special notes for service teams.
         </Typography>
       </Paper>
 
-      <Box className="dashboard-grid">
-        <Paper className="content-panel" elevation={0}>
-          <Typography variant="h5" className="panel-title">
+      <Box sx={ui.dashboardGrid()}>
+        <Paper sx={ui.contentPanel} elevation={0}>
+          <Typography variant="h5" sx={ui.panelTitle}>
             Guest Directory
           </Typography>
           <Stack spacing={1.5} sx={{ mt: 2.5 }}>
             {data.guests.map((guest) => (
-              <Box key={guest.id} className="record-card">
+              <Box key={guest.id} sx={ui.recordCard}>
                 <Box>
-                  <Typography className="row-title">{guest.name}</Typography>
-                  <Typography className="row-copy">
+                  <Typography sx={ui.rowTitle}>{guest.name}</Typography>
+                  <Typography sx={ui.rowCopy}>
                     {guest.email} • {guest.phone}
                   </Typography>
-                  <Typography className="row-copy">
+                  <Typography sx={ui.rowCopy}>
                     {guest.nationality} • {guest.notes}
                   </Typography>
                 </Box>
@@ -79,8 +79,8 @@ export function GuestsPage() {
           </Stack>
         </Paper>
 
-        <Paper className="content-panel" elevation={0}>
-          <Typography variant="h5" className="panel-title">
+        <Paper sx={ui.contentPanel} elevation={0}>
+          <Typography variant="h5" sx={ui.panelTitle}>
             Add Guest
           </Typography>
           <Stack component="form" spacing={2} sx={{ mt: 2.5 }} onSubmit={handleSubmit}>

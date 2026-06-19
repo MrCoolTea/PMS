@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useResort } from '../../context/ResortContext.jsx';
-import '../../App.css';
+import { ui } from '../../styles/ui.js';
 
 function programColor(status) {
   if (status === 'Scheduled') return 'success';
@@ -48,31 +48,31 @@ export function ProgramsPage() {
 
   return (
     <Stack spacing={3}>
-      <Paper className="hero-panel" elevation={0}>
-        <Typography className="eyebrow">Programs</Typography>
-        <Typography variant="h3" className="hero-title">
+      <Paper sx={ui.heroPanel} elevation={0}>
+        <Typography sx={ui.eyebrow}>Programs</Typography>
+        <Typography variant="h3" sx={ui.heroTitle}>
           Scheduled resort programs and guest activities
         </Typography>
-        <Typography className="hero-copy">
+        <Typography sx={ui.heroCopy}>
           Plan tours, yoga, kids activities, entertainment, and other guest-facing
           programs with dates and capacity.
         </Typography>
       </Paper>
 
-      <Box className="dashboard-grid">
-        <Paper className="content-panel" elevation={0}>
-          <Typography variant="h5" className="panel-title">
+      <Box sx={ui.dashboardGrid()}>
+        <Paper sx={ui.contentPanel} elevation={0}>
+          <Typography variant="h5" sx={ui.panelTitle}>
             Program Schedule
           </Typography>
           <Stack spacing={1.5} sx={{ mt: 2.5 }}>
             {data.programs.map((program) => (
-              <Box key={program.id} className="record-card">
+              <Box key={program.id} sx={ui.recordCard}>
                 <Box>
-                  <Typography className="row-title">{program.title}</Typography>
-                  <Typography className="row-copy">
+                  <Typography sx={ui.rowTitle}>{program.title}</Typography>
+                  <Typography sx={ui.rowCopy}>
                     {program.schedule} • {program.venue}
                   </Typography>
-                  <Typography className="row-copy">
+                  <Typography sx={ui.rowCopy}>
                     {program.host} • {program.bookings}/{program.capacity} booked
                   </Typography>
                 </Box>
@@ -82,8 +82,8 @@ export function ProgramsPage() {
           </Stack>
         </Paper>
 
-        <Paper className="content-panel" elevation={0}>
-          <Typography variant="h5" className="panel-title">
+        <Paper sx={ui.contentPanel} elevation={0}>
+          <Typography variant="h5" sx={ui.panelTitle}>
             Add Program
           </Typography>
           <Stack component="form" spacing={2} sx={{ mt: 2.5 }} onSubmit={handleSubmit}>

@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useResort } from '../../context/ResortContext.jsx';
-import '../../App.css';
+import { ui } from '../../styles/ui.js';
 
 function paymentColor(status) {
   if (status === 'Paid') return 'success';
@@ -53,48 +53,48 @@ export function PaymentsPage() {
 
   return (
     <Stack spacing={3}>
-      <Paper className="hero-panel" elevation={0}>
-        <Typography className="eyebrow">Payments</Typography>
-        <Typography variant="h3" className="hero-title">
+      <Paper sx={ui.heroPanel} elevation={0}>
+        <Typography sx={ui.eyebrow}>Payments</Typography>
+        <Typography variant="h3" sx={ui.heroTitle}>
           Stays, deposits, and front-desk collections
         </Typography>
-        <Typography className="hero-copy">
+        <Typography sx={ui.heroCopy}>
           Record guest payments from direct bookings, OTAs, and walk-ins while
           keeping payment methods visible.
         </Typography>
       </Paper>
 
-      <Box className="stats-grid stats-grid-compact">
-        <Paper className="stat-card" elevation={0}>
-          <Typography className="stat-title">Total Collected</Typography>
-          <Typography variant="h4" className="stat-value">
+      <Box sx={ui.statsGrid(2)}>
+        <Paper sx={ui.statCard} elevation={0}>
+          <Typography sx={ui.statTitle}>Total Collected</Typography>
+          <Typography variant="h4" sx={ui.statValue}>
             ${totalCollected.toLocaleString()}
           </Typography>
         </Paper>
-        <Paper className="stat-card" elevation={0}>
-          <Typography className="stat-title">Partial Payments</Typography>
-          <Typography variant="h4" className="stat-value">
+        <Paper sx={ui.statCard} elevation={0}>
+          <Typography sx={ui.statTitle}>Partial Payments</Typography>
+          <Typography variant="h4" sx={ui.statValue}>
             {data.payments.filter((payment) => payment.status === 'Partial').length}
           </Typography>
         </Paper>
       </Box>
 
-      <Box className="dashboard-grid">
-        <Paper className="content-panel" elevation={0}>
-          <Typography variant="h5" className="panel-title">
+      <Box sx={ui.dashboardGrid()}>
+        <Paper sx={ui.contentPanel} elevation={0}>
+          <Typography variant="h5" sx={ui.panelTitle}>
             Payment Ledger
           </Typography>
           <Stack spacing={1.5} sx={{ mt: 2.5 }}>
             {data.payments.map((payment) => (
-              <Box key={payment.id} className="record-card">
+              <Box key={payment.id} sx={ui.recordCard}>
                 <Box>
-                  <Typography className="row-title">
+                  <Typography sx={ui.rowTitle}>
                     {payment.guest} • ${payment.amount}
                   </Typography>
-                  <Typography className="row-copy">
+                  <Typography sx={ui.rowCopy}>
                     {payment.reservation} • {payment.source}
                   </Typography>
-                  <Typography className="row-copy">
+                  <Typography sx={ui.rowCopy}>
                     {payment.method} • {payment.paidDate}
                   </Typography>
                 </Box>
@@ -104,8 +104,8 @@ export function PaymentsPage() {
           </Stack>
         </Paper>
 
-        <Paper className="content-panel" elevation={0}>
-          <Typography variant="h5" className="panel-title">
+        <Paper sx={ui.contentPanel} elevation={0}>
+          <Typography variant="h5" sx={ui.panelTitle}>
             Record Payment
           </Typography>
           <Stack component="form" spacing={2} sx={{ mt: 2.5 }} onSubmit={handleSubmit}>
