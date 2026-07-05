@@ -16,6 +16,7 @@ import { MarketingPage } from './pages/communications/page.jsx';
 import { FilesPage } from './pages/files/page.jsx';
 import { SettingsPage } from './pages/settings/page.jsx';
 import { IntegrationsPage } from './pages/integrations/page.jsx';
+import { WebsitePage } from './pages/website/page.jsx';
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,7 @@ const router = createBrowserRouter([
       { path: 'marketing', element: <MarketingPage /> },
       { path: 'integrations', element: <IntegrationsPage /> },
       { path: 'files', element: <FilesPage /> },
+      { path: 'website', element: <WebsitePage /> },
       { path: 'reports', element: <ReportsPage /> },
       { path: 'settings', element: <SettingsPage /> },
     ],

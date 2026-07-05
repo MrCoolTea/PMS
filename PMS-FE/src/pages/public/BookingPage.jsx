@@ -5,6 +5,7 @@ import { ui } from '../../styles/ui.js';
 
 export function BookingPage() {
   const { data } = useResort();
+  const content = data.siteContent ?? {};
   const [form, setForm] = useState({
     checkIn: '',
     checkOut: '',
@@ -23,13 +24,12 @@ export function BookingPage() {
   return (
     <Stack spacing={3}>
       <Paper sx={ui.publicHero(true)} elevation={0}>
-        <Typography sx={ui.eyebrow}>Direct Booking</Typography>
+        <Typography sx={ui.eyebrow}>{content.bookingEyebrow ?? 'Direct Booking'}</Typography>
         <Typography variant="h2" sx={ui.publicTitle}>
-          Search dates and choose your stay
+          {content.bookingHeadline ?? 'Search dates and choose your stay'}
         </Typography>
         <Typography sx={ui.publicCopy}>
-          This frontend booking page is ready to connect to your real availability,
-          pricing, and payment backend later.
+          {content.bookingCopy ?? 'This booking page is ready to connect to your real availability, pricing, and payment backend later.'}
         </Typography>
       </Paper>
 

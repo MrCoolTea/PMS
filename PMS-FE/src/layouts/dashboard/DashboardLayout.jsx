@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Divider,
+  CircularProgress,
   Paper,
   Stack,
   Typography,
@@ -21,7 +22,8 @@ import HubRoundedIcon from '@mui/icons-material/HubRounded';
 import FolderRoundedIcon from '@mui/icons-material/FolderRounded';
 import AssessmentRoundedIcon from '@mui/icons-material/AssessmentRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
-import { getStoredUser, logoutUser } from '../../lib/auth.js';
+import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
+import { useAuth } from '../../context/AuthContext.jsx';
 import { ResortProvider } from '../../context/ResortContext.jsx';
 import { ui } from '../../styles/ui.js';
 
@@ -35,6 +37,7 @@ const navigationItems = [
   { label: 'Marketing', path: '/admin/marketing', icon: <CampaignRoundedIcon fontSize="small" /> },
   { label: 'Integrations', path: '/admin/integrations', icon: <HubRoundedIcon fontSize="small" /> },
   { label: 'Files', path: '/admin/files', icon: <FolderRoundedIcon fontSize="small" /> },
+  { label: 'Website', path: '/admin/website', icon: <LanguageRoundedIcon fontSize="small" /> },
   { label: 'Reports', path: '/admin/reports', icon: <AssessmentRoundedIcon fontSize="small" /> },
   { label: 'Settings', path: '/admin/settings', icon: <SettingsRoundedIcon fontSize="small" /> },
 ];
@@ -42,14 +45,31 @@ const navigationItems = [
 function DashboardFrame() {
   const theme = useTheme();
   const navigate = useNavigate();
-  const user = getStoredUser();
+  const { status, user, logout } = useAuth();
+
+  if (status === 'loading') {
+    return (
+      <Box
+        sx={{
+          minHeight: '100vh',
+          display: 'grid',
+          placeItems: 'center',
+        }}
+      >
+        <Stack direction="row" spacing={1.5} alignItems="center">
+          <CircularProgress size={24} />
+          <Typography>Checking session...</Typography>
+        </Stack>
+      </Box>
+    );
+  }
 
   if (!user) {
     return <Navigate to="/admin/login" replace />;
   }
 
   function handleLogout() {
-    logoutUser();
+    logout();
     navigate('/admin/login');
   }
 
@@ -91,8 +111,10 @@ function DashboardFrame() {
           <Stack spacing={1.5}>
             <Typography sx={ui.sidebarSection}>Signed in as</Typography>
             <Box sx={ui.userCard}>
-              <Typography sx={ui.userName}>{user.name}</Typography>
-              <Typography sx={ui.userRole}>Resort Admin</Typography>
+              <Typography sx={ui.userName}>
+                {user.name || `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim()}
+              </Typography>
+              <Typography sx={ui.userRole}>{user.role}</Typography>
               <Typography sx={ui.userEmail}>{user.email}</Typography>
             </Box>
             <Button variant="outlined" onClick={handleLogout}>

@@ -10,14 +10,15 @@ import { ui } from '../../styles/ui.js';
 export function PublicNavbar() {
   const theme = useTheme();
   const { data } = useResort();
+  const content = data.siteContent ?? {};
 
   return (
     <Box component="header" sx={ui.siteHeader}>
       <Box sx={ui.siteBrand}>
         <VillaRoundedIcon />
         <Box>
-          <Typography sx={ui.siteBrandText}>{data.resort.name}</Typography>
-          <Typography sx={ui.siteBrandLocation}>{data.resort.location}</Typography>
+          <Typography sx={ui.siteBrandText}>{content.name ?? data.resort.name}</Typography>
+          <Typography sx={ui.siteBrandLocation}>{content.location ?? data.resort.location}</Typography>
         </Box>
       </Box>
 

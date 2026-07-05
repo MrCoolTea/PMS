@@ -166,11 +166,12 @@ export const appTheme = createTheme({
         elevation: 0,
       },
       styleOverrides: {
-        root: {
+        root: ({ theme }) => ({
           border: `1px solid ${palette.divider}`,
           backgroundImage: 'none',
           boxShadow: '0 12px 32px rgba(15, 23, 42, 0.06)',
-        },
+          padding: theme.spacing(0.5),
+        }),
       },
     },
     MuiButton: {

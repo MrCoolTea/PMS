@@ -4,16 +4,17 @@ import { ui } from '../../styles/ui.js';
 
 export function ExperiencesPage() {
   const { data } = useResort();
+  const content = data.siteContent ?? {};
 
   return (
     <Stack spacing={3}>
       <Paper sx={ui.publicHero(true)} elevation={0}>
-        <Typography sx={ui.eyebrow}>Experiences</Typography>
+        <Typography sx={ui.eyebrow}>{content.experiencesEyebrow ?? 'Experiences'}</Typography>
         <Typography variant="h2" sx={ui.publicTitle}>
-          Curated activities for every stay
+          {content.experiencesHeadline ?? 'Curated activities for every stay'}
         </Typography>
         <Typography sx={ui.publicCopy}>
-          Surface scheduled programs from the same resort system visitors book from.
+          {content.experiencesCopy ?? 'Surface scheduled programs from the same resort system visitors book from.'}
         </Typography>
       </Paper>
 

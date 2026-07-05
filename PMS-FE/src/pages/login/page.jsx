@@ -4,42 +4,84 @@ import {
   Alert,
   Box,
   Button,
+  CircularProgress,
+  IconButton,
   InputAdornment,
   Paper,
   Stack,
+  Tab,
+  Tabs,
   TextField,
   Typography,
 } from '@mui/material';
 import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
+import PersonOutlineRoundedIcon from '@mui/icons-material/PersonOutlineRounded';
+import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
+import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
 import { alpha, useTheme } from '@mui/material/styles';
-import { isAuthenticated, loginUser } from '../../lib/auth.js';
-
-const DEMO_EMAIL = 'admin@resortdesk.local';
-const DEMO_PASSWORD = 'resort123';
+import { useAuth } from '../../context/AuthContext.jsx';
 
 export function LoginPage() {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [email, setEmail] = useState(DEMO_EMAIL);
-  const [password, setPassword] = useState(DEMO_PASSWORD);
+  const { status, isAuthenticated, login, register } = useAuth();
+  const [mode, setMode] = useState('login');
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    firstName: '',
+    lastName: '',
+  });
   const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  if (isAuthenticated()) {
+  if (isAuthenticated) {
     return <Navigate to="/admin" replace />;
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  function handleChange(event) {
+    setForm((current) => ({
+      ...current,
+      [event.target.name]: event.target.value,
+    }));
+  }
 
-    if (email !== DEMO_EMAIL || password !== DEMO_PASSWORD) {
-      setError('Use the demo resort credentials shown below.');
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setError('');
+
+    if (mode === 'register' && form.password !== form.confirmPassword) {
+      setError('Passwords do not match.');
       return;
     }
 
-    loginUser(email);
-    navigate('/admin');
+    setSubmitting(true);
+
+    try {
+      if (mode === 'login') {
+        await login({
+          email: form.email,
+          password: form.password,
+        });
+      } else {
+        await register({
+          email: form.email,
+          password: form.password,
+          firstName: form.firstName,
+          lastName: form.lastName,
+        });
+      }
+
+      navigate('/admin');
+    } catch (submissionError) {
+      setError(submissionError.message);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const styles = {
@@ -111,13 +153,30 @@ export function LoginPage() {
     panelCopy: {
       color: 'text.secondary',
     },
-    demoNote: {
+    formNote: {
       p: 2,
       borderRadius: 2.25,
       border: `1px solid ${alpha(theme.palette.grey[500], 0.18)}`,
       bgcolor: theme.palette.grey[100],
     },
   };
+
+  if (status === 'loading') {
+    return (
+      <Box
+        sx={{
+          minHeight: '100vh',
+          display: 'grid',
+          placeItems: 'center',
+        }}
+      >
+        <Stack direction="row" spacing={1.5} alignItems="center">
+          <CircularProgress size={24} />
+          <Typography>Checking session...</Typography>
+        </Stack>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={styles.shell}>
@@ -131,9 +190,8 @@ export function LoginPage() {
           Manage rooms, guest stays, resort programs, payments, and OTA channels.
         </Typography>
         <Typography sx={styles.copy}>
-          This frontend is now structured for resort operations, with room control,
-          reservation handling, activity scheduling, social media, and booking
-          integrations ready for backend hookup later.
+          Sign in with a real backend account, or create one now against the NestJS
+          auth service running on <strong>http://localhost:4000/api</strong>.
         </Typography>
 
         <Box sx={styles.previewGrid}>
@@ -154,25 +212,76 @@ export function LoginPage() {
 
       <Paper sx={styles.card}>
         <Stack component="form" onSubmit={handleSubmit} spacing={2.5}>
+          <Tabs
+            value={mode}
+            onChange={(_event, nextMode) => {
+              setMode(nextMode);
+              setError('');
+            }}
+          >
+            <Tab label="Sign In" value="login" />
+            <Tab label="Create Account" value="register" />
+          </Tabs>
+
           <Box>
             <Typography variant="overline" sx={styles.eyebrow}>
-              Welcome back
+              {mode === 'login' ? 'Welcome back' : 'First-time setup'}
             </Typography>
             <Typography variant="h4" sx={styles.panelTitle}>
-              Sign in to the dashboard
+              {mode === 'login' ? 'Sign in to the dashboard' : 'Create your admin account'}
             </Typography>
             <Typography sx={styles.panelCopy}>
-              Use the demo account to enter the resort operations dashboard.
+              {mode === 'login'
+                ? 'Use an account stored in your backend database.'
+                : 'This creates a real user record in PostgreSQL and signs you in immediately.'}
             </Typography>
           </Box>
 
           {error ? <Alert severity="error">{error}</Alert> : null}
 
+          {mode === 'register' ? (
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+              <TextField
+                label="First Name"
+                name="firstName"
+                value={form.firstName}
+                onChange={handleChange}
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PersonOutlineRoundedIcon fontSize="small" />
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+                fullWidth
+              />
+              <TextField
+                label="Last Name"
+                name="lastName"
+                value={form.lastName}
+                onChange={handleChange}
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PersonOutlineRoundedIcon fontSize="small" />
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+                fullWidth
+              />
+            </Stack>
+          ) : null}
+
           <TextField
             label="Email"
             type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            name="email"
+            value={form.email}
+            onChange={handleChange}
             slotProps={{
               input: {
                 startAdornment: (
@@ -186,14 +295,31 @@ export function LoginPage() {
           />
           <TextField
             label="Password"
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
+            type={showPassword ? 'text' : 'password'}
+            name="password"
+            value={form.password}
+            onChange={handleChange}
             slotProps={{
               input: {
                 startAdornment: (
-                  <InputAdornment position="start">
-                    <LockOutlinedIcon fontSize="small" />
+                    <InputAdornment position="start">
+                      <LockOutlinedIcon fontSize="small" />
+                    </InputAdornment>
+                  ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      type="button"
+                      onClick={() => setShowPassword((current) => !current)}
+                      edge="end"
+                      sx={{ color: 'text.secondary' }}
+                    >
+                      {showPassword ? (
+                        <VisibilityOffRoundedIcon fontSize="small" />
+                      ) : (
+                        <VisibilityRoundedIcon fontSize="small" />
+                      )}
+                    </IconButton>
                   </InputAdornment>
                 ),
               },
@@ -201,19 +327,39 @@ export function LoginPage() {
             fullWidth
           />
 
-          <Button type="submit" variant="contained" size="large">
-            Login
+          {mode === 'register' ? (
+            <TextField
+              label="Confirm Password"
+              type={showPassword ? 'text' : 'password'}
+              name="confirmPassword"
+              value={form.confirmPassword}
+              onChange={handleChange}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LockOutlinedIcon fontSize="small" />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+              fullWidth
+            />
+          ) : null}
+
+          <Button type="submit" variant="contained" size="large" disabled={submitting}>
+            {submitting ? 'Submitting...' : mode === 'login' ? 'Login' : 'Create Account'}
           </Button>
 
-          <Box sx={styles.demoNote}>
+          <Box sx={styles.formNote}>
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
-              Demo credentials
+              Backend requirements
             </Typography>
             <Typography variant="body2">
-              Demo email: <strong>{DEMO_EMAIL}</strong>
+              Backend must be running on <strong>http://localhost:4000</strong>.
             </Typography>
             <Typography variant="body2">
-              Demo password: <strong>{DEMO_PASSWORD}</strong>
+              If login fails because no user exists yet, switch to <strong>Create Account</strong>.
             </Typography>
           </Box>
         </Stack>
