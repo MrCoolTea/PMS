@@ -37,3 +37,149 @@ model RefreshToken {
 
   @@index([userId])
 }
+
+model Room {
+  id        String   @id @default(cuid())
+  name      String
+  type      String
+  capacity  Int
+  rate      Float
+  floor     String
+  amenities String
+  image     String?
+  status    String   @default("Available")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Guest {
+  id          String   @id @default(cuid())
+  name        String
+  phone       String   @default("")
+  email       String   @default("")
+  nationality String   @default("")
+  notes       String   @default("")
+  vip         String   @default("Standard")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Reservation {
+  id        String   @id @default(cuid())
+  guest     String
+  room      String
+  checkIn   String
+  checkOut  String
+  source    String   @default("Direct Website")
+  total     Float    @default(0)
+  status    String   @default("Confirmed")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Program {
+  id        String   @id @default(cuid())
+  title     String
+  schedule  String
+  venue     String
+  host      String
+  capacity  Int      @default(0)
+  bookings  Int      @default(0)
+  status    String   @default("Scheduled")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PaymentRecord {
+  id          String   @id @default(cuid())
+  guest       String
+  reservation String
+  amount      Float    @default(0)
+  method      String
+  source      String
+  status      String   @default("Paid")
+  paidDate    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SocialAccount {
+  id          String   @id @default(cuid())
+  platform    String
+  handle      String
+  url         String
+  status      String   @default("Ready")
+  accountName String
+  sync        String   @default("Ready to publish")
+  audience    String   @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model MarketingPost {
+  id        String   @id @default(cuid())
+  title     String
+  caption   String
+  platforms String[]
+  mediaUrl  String
+  publishAt String
+  status    String   @default("Draft")
+  cta       String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Integration {
+  id        String   @id @default(cuid())
+  platform  String
+  category  String
+  status    String   @default("Pending Setup")
+  sync      String   @default("Not configured")
+  notes     String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FileRecord {
+  id        String   @id @default(cuid())
+  name      String
+  area      String
+  category  String
+  updatedAt String
+  createdAt DateTime @default(now())
+}
+
+model SiteSettings {
+  id                String   @id @default(cuid())
+  resortName        String
+  currency          String
+  timezone          String
+  checkInTime       String
+  checkOutTime      String
+  notifications     Boolean  @default(true)
+  autoConfirmations Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model SiteContent {
+  id                  String   @id @default(cuid())
+  name                String
+  location            String
+  phone               String
+  email               String
+  tagline             String
+  homeEyebrow         String
+  homeHeadline        String
+  homeCopy            String
+  experiencesEyebrow  String
+  experiencesHeadline String
+  experiencesCopy     String
+  bookingEyebrow      String
+  bookingHeadline     String
+  bookingCopy         String
+  footerAbout         String
+  footerCopyright     String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}

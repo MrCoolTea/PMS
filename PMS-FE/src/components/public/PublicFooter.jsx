@@ -16,6 +16,7 @@ const socialIcons = {
 
 export function PublicFooter() {
   const { data } = useResort();
+  const content = data.siteContent ?? {};
   const socials = data.socialMedia.filter((account) =>
     ['Facebook', 'Instagram', 'TikTok'].includes(account.platform)
   );
@@ -27,13 +28,13 @@ export function PublicFooter() {
           <Box sx={ui.siteFooterCard}>
             <Typography sx={ui.siteFooterHeading}>Get in Touch</Typography>
             <Stack spacing={1.25} sx={{ mt: 2 }}>
-              <Link href={`tel:${data.resort.phone}`} sx={ui.footerLink} underline="none">
+              <Link href={`tel:${content.phone ?? data.resort.phone}`} sx={ui.footerLink} underline="none">
                 <CallRoundedIcon fontSize="small" />
-                {data.resort.phone}
+                {content.phone ?? data.resort.phone}
               </Link>
-              <Link href={`mailto:${data.resort.email}`} sx={ui.footerLink} underline="none">
+              <Link href={`mailto:${content.email ?? data.resort.email}`} sx={ui.footerLink} underline="none">
                 <EmailRoundedIcon fontSize="small" />
-                {data.resort.email}
+                {content.email ?? data.resort.email}
               </Link>
             </Stack>
           </Box>
@@ -43,9 +44,9 @@ export function PublicFooter() {
             <Stack direction="row" spacing={1.25} sx={{ mt: 2 }} alignItems="flex-start">
               <PlaceRoundedIcon fontSize="small" sx={ui.footerIconTop} />
               <Typography sx={ui.siteFooterCopy}>
-                {data.resort.name}
+                {content.name ?? data.resort.name}
                 <br />
-                {data.resort.location}
+                {content.location ?? data.resort.location}
               </Typography>
             </Stack>
           </Box>
@@ -53,9 +54,8 @@ export function PublicFooter() {
           <Box sx={ui.siteFooterCard}>
             <Typography sx={ui.siteFooterHeading}>About Us</Typography>
             <Typography sx={{ ...ui.siteFooterCopy, mt: 2 }}>
-              {data.resort.name} is a coastal stay in {data.resort.location}, offering
-              comfortable rooms, local experiences, and direct booking for guests planning
-              their beach getaway.
+              {content.footerAbout ??
+                `${data.resort.name} is a coastal stay in ${data.resort.location}, offering comfortable rooms, local experiences, and direct booking for guests planning their beach getaway.`}
             </Typography>
           </Box>
 
@@ -84,8 +84,8 @@ export function PublicFooter() {
         </Box>
 
         <Typography sx={ui.siteFooterNote}>
-          © 2026 {data.resort.name}. Beach stays and direct bookings in Tondol, Anda,
-          Pangasinan.
+          {content.footerCopyright ??
+            `© 2026 ${data.resort.name}. Beach stays and direct bookings in Tondol, Anda, Pangasinan.`}
         </Typography>
       </Box>
     </Box>

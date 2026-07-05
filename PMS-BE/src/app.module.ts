@@ -7,6 +7,14 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { StorageModule } from './storage/storage.module';
 import { PaymentsModule } from './payments/payments.module';
+import { RoomsModule } from './rooms/rooms.module';
+import { GuestsModule } from './guests/guests.module';
+import { ReservationsModule } from './reservations/reservations.module';
+import { ProgramsModule } from './programs/programs.module';
+import { IntegrationsModule } from './integrations/integrations.module';
+import { FilesModule } from './files/files.module';
+import { MarketingModule } from './marketing/marketing.module';
+import { SiteModule } from './site/site.module';
 
 @Module({
   imports: [
@@ -28,6 +36,14 @@ import { PaymentsModule } from './payments/payments.module';
     AuthModule,
     StorageModule,
     PaymentsModule,
+    RoomsModule,
+    GuestsModule,
+    ReservationsModule,
+    ProgramsModule,
+    IntegrationsModule,
+    FilesModule,
+    MarketingModule,
+    SiteModule,
   ],
   controllers: [AppController],
   providers: [AppService],

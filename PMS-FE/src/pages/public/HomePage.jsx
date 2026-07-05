@@ -7,17 +7,17 @@ export function HomePage() {
   const { data } = useResort();
   const featuredRooms = data.rooms.slice(0, 3);
   const social = data.socialMedia.slice(0, 3);
+  const content = data.siteContent ?? {};
 
   return (
     <Stack spacing={3}>
       <Paper sx={ui.publicHero()} elevation={0}>
-        <Typography sx={ui.eyebrow}>{data.resort.location}</Typography>
+        <Typography sx={ui.eyebrow}>{content.homeEyebrow ?? data.resort.location}</Typography>
         <Typography variant="h1" sx={ui.publicTitle}>
-          Escape to {data.resort.name}
+          {content.homeHeadline ?? `Escape to ${data.resort.name}`}
         </Typography>
         <Typography sx={ui.publicCopy}>
-          Beachfront villas, curated experiences, and direct online booking from one
-          resort website.
+          {content.homeCopy ?? data.resort.tagline}
         </Typography>
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ mt: 3 }}>
           <Button component={Link} to="/book" variant="contained" size="large">
