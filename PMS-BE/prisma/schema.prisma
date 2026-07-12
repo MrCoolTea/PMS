@@ -156,6 +156,7 @@ model SiteSettings {
   timezone          String
   checkInTime       String
   checkOutTime      String
+  publicTheme       String   @default("lagoon")
   notifications     Boolean  @default(true)
   autoConfirmations Boolean  @default(true)
   createdAt         DateTime @default(now())
@@ -165,6 +166,7 @@ model SiteSettings {
 model SiteContent {
   id                  String   @id @default(cuid())
   name                String
+  logoUrl             String   @default("")
   location            String
   phone               String
   email               String
@@ -172,6 +174,7 @@ model SiteContent {
   homeEyebrow         String
   homeHeadline        String
   homeCopy            String
+  heroImageUrl        String   @default("")
   experiencesEyebrow  String
   experiencesHeadline String
   experiencesCopy     String

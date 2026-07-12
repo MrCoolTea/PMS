@@ -28,6 +28,15 @@ export const ui = {
     gap: 1.5,
     color: 'text.primary',
   },
+  siteBrandLogo: {
+    width: 44,
+    height: 44,
+    objectFit: 'contain',
+    borderRadius: 1.5,
+    backgroundColor: '#fff',
+    border: '1px solid rgba(20, 55, 44, 0.12)',
+    p: 0.5,
+  },
   siteBrandText: {
     fontWeight: 700,
     color: 'text.primary',
@@ -158,6 +167,21 @@ export const ui = {
     background:
       'linear-gradient(135deg, rgba(255, 250, 241, 0.96), rgba(236, 247, 241, 0.96)), rgba(255, 255, 255, 0.86)',
   }),
+  publicHeroGrid: {
+    display: 'grid',
+    gridTemplateColumns: { xs: '1fr', lg: 'minmax(0, 1fr) 420px' },
+    gap: 3,
+    alignItems: 'center',
+  },
+  publicHeroImage: {
+    width: '100%',
+    minHeight: { xs: 240, md: 320 },
+    maxHeight: 420,
+    objectFit: 'cover',
+    borderRadius: 3,
+    border: '1px solid rgba(20, 55, 44, 0.1)',
+    boxShadow: '0 22px 50px rgba(20, 55, 44, 0.14)',
+  },
   eyebrow: {
     fontSize: '0.78rem',
     fontWeight: 700,
