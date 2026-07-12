@@ -329,6 +329,7 @@ export const initialResortData = {
     timezone: 'Asia/Manila',
     checkInTime: '14:00',
     checkOutTime: '12:00',
+    publicTheme: 'lagoon',
     notifications: true,
     autoConfirmations: true,
   },

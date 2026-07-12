@@ -22,6 +22,10 @@ export class UpdateSiteSettingsDto {
   checkOutTime?: string;
 
   @IsOptional()
+  @IsString()
+  publicTheme?: string;
+
+  @IsOptional()
   @IsBoolean()
   notifications?: boolean;
 
@@ -34,6 +38,10 @@ export class UpdateSiteContentDto {
   @IsOptional()
   @IsString()
   name?: string;
+
+  @IsOptional()
+  @IsString()
+  logoUrl?: string;
 
   @IsOptional()
   @IsString()
@@ -62,6 +70,10 @@ export class UpdateSiteContentDto {
   @IsOptional()
   @IsString()
   homeCopy?: string;
+
+  @IsOptional()
+  @IsString()
+  heroImageUrl?: string;
 
   @IsOptional()
   @IsString()

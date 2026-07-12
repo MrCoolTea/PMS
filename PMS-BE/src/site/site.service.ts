@@ -8,12 +8,14 @@ const defaultSiteSettings = {
   timezone: 'Asia/Manila',
   checkInTime: '14:00',
   checkOutTime: '12:00',
+  publicTheme: 'lagoon',
   notifications: true,
   autoConfirmations: true,
 };
 
 const defaultSiteContent = {
   name: 'Paraiso sa gubat',
+  logoUrl: '',
   location: 'Tondol, Anda, Pangasinan',
   phone: '+63 917 500 0123',
   email: 'hello@paraisosagubat.com',
@@ -22,6 +24,7 @@ const defaultSiteContent = {
   homeHeadline: 'Escape to Paraiso sa gubat',
   homeCopy:
     'Beachfront villas, curated experiences, and direct online booking from one resort website.',
+  heroImageUrl: '',
   experiencesEyebrow: 'Experiences',
   experiencesHeadline: 'Curated activities for every stay',
   experiencesCopy: 'Surface scheduled programs from the same resort system visitors book from.',
@@ -37,6 +40,8 @@ const defaultSiteContent = {
 
 @Injectable()
 export class SiteService {
+  private siteSchemaReady?: Promise<void>;
+
   constructor(private readonly prisma: PrismaService) {}
 
   async getSettings() {
@@ -120,6 +125,8 @@ export class SiteService {
   }
 
   private async ensureSettings() {
+    await this.ensureSiteSchemaCompatibility();
+
     const existing = await this.prisma.siteSettings.findFirst();
 
     if (existing) {
@@ -132,6 +139,8 @@ export class SiteService {
   }
 
   private async ensureContent() {
+    await this.ensureSiteSchemaCompatibility();
+
     const existing = await this.prisma.siteContent.findFirst();
 
     if (existing) {
@@ -141,5 +150,26 @@ export class SiteService {
     return this.prisma.siteContent.create({
       data: defaultSiteContent,
     });
+  }
+
+  private async ensureSiteSchemaCompatibility() {
+    if (!this.siteSchemaReady) {
+      this.siteSchemaReady = this.applySiteSchemaCompatibility();
+    }
+
+    return this.siteSchemaReady;
+  }
+
+  private async applySiteSchemaCompatibility() {
+    await this.prisma.$executeRawUnsafe(`
+      ALTER TABLE "SiteSettings"
+      ADD COLUMN IF NOT EXISTS "publicTheme" TEXT NOT NULL DEFAULT 'lagoon';
+    `);
+
+    await this.prisma.$executeRawUnsafe(`
+      ALTER TABLE "SiteContent"
+      ADD COLUMN IF NOT EXISTS "logoUrl" TEXT NOT NULL DEFAULT '',
+      ADD COLUMN IF NOT EXISTS "heroImageUrl" TEXT NOT NULL DEFAULT '';
+    `);
   }
 }
