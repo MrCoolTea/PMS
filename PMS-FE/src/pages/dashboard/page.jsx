@@ -26,7 +26,7 @@ export function DashboardPage() {
     (sum, payment) => sum + Number(payment.amount),
     0
   );
-  const activePrograms = data.programs.filter((program) => program.status === 'Scheduled').length;
+  const activePrograms = data.programs.filter((program) => program.isActive !== false).length;
   const occupancyRate = totalRooms ? Math.round((occupiedRooms / totalRooms) * 100) : 0;
 
   const statCards = [
@@ -163,7 +163,7 @@ export function DashboardPage() {
                     {program.schedule} • {program.venue}
                   </Typography>
                 </Box>
-                <Chip label={program.status} variant="outlined" />
+                <Chip label={program.isActive !== false ? 'Active' : 'Inactive'} variant="outlined" />
               </Box>
             ))}
 

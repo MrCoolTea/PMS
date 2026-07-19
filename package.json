@@ -17,5 +17,8 @@
     "be:prisma:generate": "npm --prefix PMS-BE run prisma:generate",
     "be:prisma:migrate": "npm --prefix PMS-BE run prisma:migrate",
     "build": "npm run fe:build && npm run be:build"
+  },
+  "dependencies": {
+    "react-helmet-async": "^3.0.0"
   }
 }

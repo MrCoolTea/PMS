@@ -1,14 +1,10 @@
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, IsString, Min, MinLength } from 'class-validator';
+import { IsBoolean, IsInt, IsOptional, IsString, Min, MinLength } from 'class-validator';
 
 export class CreateProgramDto {
   @IsString()
   @MinLength(1)
   title!: string;
-
-  @IsString()
-  @MinLength(1)
-  schedule!: string;
 
   @IsString()
   @MinLength(1)
@@ -31,7 +27,12 @@ export class CreateProgramDto {
 
   @IsOptional()
   @IsString()
-  status?: string;
+  imageUrl?: string;
+
+  @IsOptional()
+  @Type(() => Boolean)
+  @IsBoolean()
+  isActive?: boolean;
 }
 
 export class UpdateProgramDto {
@@ -39,11 +40,6 @@ export class UpdateProgramDto {
   @IsString()
   @MinLength(1)
   title?: string;
-
-  @IsOptional()
-  @IsString()
-  @MinLength(1)
-  schedule?: string;
 
   @IsOptional()
   @IsString()
@@ -69,5 +65,10 @@ export class UpdateProgramDto {
 
   @IsOptional()
   @IsString()
-  status?: string;
+  imageUrl?: string;
+
+  @IsOptional()
+  @Type(() => Boolean)
+  @IsBoolean()
+  isActive?: boolean;
 }

@@ -1,4 +1,5 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
+import { RootLayout } from './layouts/RootLayout.jsx';
 import { PublicLayout } from './layouts/public/PublicLayout.jsx';
 import { HomePage } from './pages/public/HomePage.jsx';
 import { BookingPage } from './pages/public/BookingPage.jsx';
@@ -20,39 +21,153 @@ import { WebsitePage } from './pages/website/page.jsx';
 
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <PublicLayout />,
+    element: <RootLayout />,
     children: [
-      { index: true, element: <HomePage /> },
-      { path: 'book', element: <BookingPage /> },
-      { path: 'experiences', element: <ExperiencesPage /> },
+      {
+        path: '/',
+        element: <PublicLayout />,
+        children: [
+          {
+            index: true,
+            element: <HomePage />,
+            handle: {
+              title: 'Home',
+              description: 'Discover rooms, amenities, and guest experiences.',
+            },
+          },
+          {
+            path: 'book',
+            element: <BookingPage />,
+            handle: {
+              title: 'Book',
+              description: 'Reserve rooms and plan your stay.',
+            },
+          },
+          {
+            path: 'experiences',
+            element: <ExperiencesPage />,
+            handle: {
+              title: 'Experiences',
+              description: 'Browse resort activities and guest programs.',
+            },
+          },
+        ],
+      },
+      {
+        path: '/admin/login',
+        element: <LoginPage />,
+        handle: {
+          title: 'Admin Login',
+          description: 'Sign in to the resort management dashboard.',
+        },
+      },
+      {
+        path: '/admin',
+        element: <DashboardLayout />,
+        children: [
+          {
+            index: true,
+            element: <DashboardPage />,
+            handle: {
+              title: 'Dashboard',
+              description: 'Monitor resort operations from the admin dashboard.',
+            },
+          },
+          {
+            path: 'rooms',
+            element: <RoomsPage />,
+            handle: {
+              title: 'Rooms',
+              description: 'Manage room inventory and availability.',
+            },
+          },
+          {
+            path: 'guests',
+            element: <GuestsPage />,
+            handle: {
+              title: 'Guests',
+              description: 'View and manage guest profiles.',
+            },
+          },
+          {
+            path: 'reservations',
+            element: <ReservationsPage />,
+            handle: {
+              title: 'Reservations',
+              description: 'Track bookings, arrivals, and departures.',
+            },
+          },
+          {
+            path: 'programs',
+            element: <ProgramsPage />,
+            handle: {
+              title: 'Programs',
+              description: 'Coordinate scheduled resort programs and activities.',
+            },
+          },
+          {
+            path: 'payments',
+            element: <PaymentsPage />,
+            handle: {
+              title: 'Payments',
+              description: 'Review transactions and payment status.',
+            },
+          },
+          {
+            path: 'marketing',
+            element: <MarketingPage />,
+            handle: {
+              title: 'Marketing',
+              description: 'Manage campaigns and guest communications.',
+            },
+          },
+          {
+            path: 'integrations',
+            element: <IntegrationsPage />,
+            handle: {
+              title: 'Integrations',
+              description: 'Configure OTA and channel integrations.',
+            },
+          },
+          {
+            path: 'files',
+            element: <FilesPage />,
+            handle: {
+              title: 'Files',
+              description: 'Organize documents, media, and shared assets.',
+            },
+          },
+          {
+            path: 'website',
+            element: <WebsitePage />,
+            handle: {
+              title: 'Website',
+              description: 'Customize your public resort website.',
+            },
+          },
+          {
+            path: 'reports',
+            element: <ReportsPage />,
+            handle: {
+              title: 'Reports',
+              description: 'Analyze occupancy, revenue, and operations.',
+            },
+          },
+          {
+            path: 'settings',
+            element: <SettingsPage />,
+            handle: {
+              title: 'Settings',
+              description: 'Adjust resort and account settings.',
+            },
+          },
+        ],
+      },
+      {
+        path: '/dashboard',
+        element: <Navigate to="/admin" replace />,
+      },
     ],
-  },
-  {
-    path: '/admin/login',
-    element: <LoginPage />,
-  },
-  {
-    path: '/admin',
-    element: <DashboardLayout />,
-    children: [
-      { index: true, element: <DashboardPage /> },
-      { path: 'rooms', element: <RoomsPage /> },
-      { path: 'guests', element: <GuestsPage /> },
-      { path: 'reservations', element: <ReservationsPage /> },
-      { path: 'programs', element: <ProgramsPage /> },
-      { path: 'payments', element: <PaymentsPage /> },
-      { path: 'marketing', element: <MarketingPage /> },
-      { path: 'integrations', element: <IntegrationsPage /> },
-      { path: 'files', element: <FilesPage /> },
-      { path: 'website', element: <WebsitePage /> },
-      { path: 'reports', element: <ReportsPage /> },
-      { path: 'settings', element: <SettingsPage /> },
-    ],
-  },
-  {
-    path: '/dashboard',
-    element: <Navigate to="/admin" replace />,
   },
 ]);
 

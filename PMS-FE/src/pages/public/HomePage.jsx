@@ -48,7 +48,7 @@ export function HomePage() {
     },
     {
       title: 'Scheduled Experiences',
-      value: data.programs.filter((program) => program.status === 'Scheduled').length,
+      value: data.programs.filter((program) => program.isActive !== false).length,
       note: 'Daily guest activities available',
     },
   ];

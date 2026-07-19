@@ -75,7 +75,10 @@ export class SiteService {
       this.ensureContent(),
       this.ensureSettings(),
       this.prisma.room.findMany({ orderBy: { createdAt: 'desc' } }),
-      this.prisma.program.findMany({ orderBy: { createdAt: 'desc' } }),
+      this.prisma.program.findMany({
+        where: { isActive: true },
+        orderBy: { createdAt: 'desc' },
+      }),
       this.prisma.socialAccount.findMany({ orderBy: { createdAt: 'desc' } }),
     ]);
 
@@ -170,6 +173,12 @@ export class SiteService {
       ALTER TABLE "SiteContent"
       ADD COLUMN IF NOT EXISTS "logoUrl" TEXT NOT NULL DEFAULT '',
       ADD COLUMN IF NOT EXISTS "heroImageUrl" TEXT NOT NULL DEFAULT '';
+    `);
+
+    await this.prisma.$executeRawUnsafe(`
+      ALTER TABLE "Program"
+      ADD COLUMN IF NOT EXISTS "imageUrl" TEXT NOT NULL DEFAULT '',
+      ADD COLUMN IF NOT EXISTS "isActive" BOOLEAN NOT NULL DEFAULT true;
     `);
   }
 }
