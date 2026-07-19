@@ -7,6 +7,7 @@ export function ExperiencesPage() {
   const { data } = useResort();
   const { currentDesign, mode } = usePublicDesign();
   const content = data.siteContent ?? {};
+  const activePrograms = data.programs.filter((program) => program.isActive !== false);
   const heroImageUrl = data.rooms[0]?.image;
   const isBackgroundHero =
     currentDesign.heroImageMode === 'background' || currentDesign.heroImageMode === 'background-soft';
@@ -95,7 +96,7 @@ export function ExperiencesPage() {
           pb: 1,
         }}
       >
-        {data.programs.map((program, index) => (
+        {activePrograms.map((program, index) => (
           <Paper
             key={program.id}
             elevation={0}
@@ -105,8 +106,14 @@ export function ExperiencesPage() {
               scrollSnapAlign: 'start',
               borderRadius: `${currentDesign.radiusPanel}px`,
               border: currentDesign.panelBorder,
-              background: index % 2 === 0 ? currentDesign.panelBackground : currentDesign.heroSecondary,
-              color: index % 2 === 0 ? currentDesign.textPrimary : currentDesign.footerText,
+              background: program.imageUrl
+                ? `linear-gradient(0deg, rgba(10, 20, 16, 0.58), rgba(10, 20, 16, 0.28)), url("${program.imageUrl}")`
+                : index % 2 === 0
+                  ? currentDesign.panelBackground
+                  : currentDesign.heroSecondary,
+              backgroundSize: program.imageUrl ? 'cover' : 'auto',
+              backgroundPosition: program.imageUrl ? 'center' : 'initial',
+              color: program.imageUrl || index % 2 !== 0 ? currentDesign.footerText : currentDesign.textPrimary,
               display: 'grid',
               alignContent: 'space-between',
             }}
@@ -118,7 +125,7 @@ export function ExperiencesPage() {
               <Typography sx={{ mt: 1, fontWeight: 700, fontSize: '1.75rem', fontFamily: currentDesign.titleFontFamily }}>
                 {program.title}
               </Typography>
-              <Typography sx={{ mt: 1, opacity: 0.8 }}>{program.schedule}</Typography>
+              {program.schedule ? <Typography sx={{ mt: 1, opacity: 0.8 }}>{program.schedule}</Typography> : null}
             </Box>
             <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
               <Typography sx={{ opacity: 0.82 }}>
@@ -127,7 +134,7 @@ export function ExperiencesPage() {
                 {program.bookings}/{program.capacity} spots booked
               </Typography>
               <Chip
-                label={program.status}
+                label="Active"
                 sx={{
                   borderRadius: 999,
                   background: index % 2 === 0 ? currentDesign.accentSoft : 'rgba(255,255,255,0.18)',
@@ -158,7 +165,7 @@ export function ExperiencesPage() {
             alignItems: currentDesign.heroTextAlign === 'center' ? 'center' : 'stretch',
           }}
         >
-          {data.programs.map((program) => (
+        {activePrograms.map((program) => (
             <Box
               key={program.id}
               sx={{
@@ -178,14 +185,14 @@ export function ExperiencesPage() {
               <Box>
                 <Typography sx={{ fontWeight: 700, color: currentDesign.textPrimary }}>{program.title}</Typography>
                 <Typography sx={{ color: currentDesign.textSecondary }}>
-                  {program.schedule} • {program.venue}
+                  {program.schedule ? `${program.schedule} • ` : ''}{program.venue}
                 </Typography>
                 <Typography sx={{ color: currentDesign.textSecondary }}>
                   Hosted by {program.host} • {program.bookings}/{program.capacity} spots booked
                 </Typography>
               </Box>
               <Chip
-                label={program.status}
+                label="Active"
                 sx={{
                   borderRadius: 999,
                   background: currentDesign.accentSoft,

@@ -127,7 +127,9 @@ export const initialResortData = {
       host: 'Tour Desk',
       capacity: 20,
       bookings: 14,
-      status: 'Scheduled',
+      imageUrl: '',
+      isActive: true,
+      status: 'Active',
     },
     {
       id: 'prog-2',
@@ -137,7 +139,9 @@ export const initialResortData = {
       host: 'Wellness Team',
       capacity: 12,
       bookings: 9,
-      status: 'Scheduled',
+      imageUrl: '',
+      isActive: true,
+      status: 'Active',
     },
     {
       id: 'prog-3',
@@ -147,7 +151,9 @@ export const initialResortData = {
       host: 'Activities Team',
       capacity: 10,
       bookings: 5,
-      status: 'Draft',
+      imageUrl: '',
+      isActive: false,
+      status: 'Inactive',
     },
   ],
   payments: [

@@ -150,6 +150,11 @@ export function WebsitePage() {
         updateSiteSettings(accessToken, settings),
       ]);
       setForm(toEditableContent(updated));
+      window.dispatchEvent(
+        new CustomEvent('site-content-updated', {
+          detail: updated,
+        })
+      );
       setSaved('Website content and design saved.');
     } catch (submissionError) {
       setError(submissionError.message);

@@ -85,6 +85,8 @@ model Program {
   host      String
   capacity  Int      @default(0)
   bookings  Int      @default(0)
+  imageUrl  String   @default("")
+  isActive  Boolean  @default(true)
   status    String   @default("Scheduled")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

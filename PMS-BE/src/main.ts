@@ -1,10 +1,17 @@
 import 'reflect-metadata';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import * as classTransformer from 'class-transformer';
+import * as classValidator from 'class-validator';
+import { json, urlencoded } from 'express';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const bodySizeLimit = '10mb';
+
+  app.use(json({ limit: bodySizeLimit }));
+  app.use(urlencoded({ extended: true, limit: bodySizeLimit }));
 
   app.setGlobalPrefix('api');
   const allowedOrigins = [
@@ -22,6 +29,8 @@ async function bootstrap() {
       whitelist: true,
       transform: true,
       forbidNonWhitelisted: true,
+      transformerPackage: classTransformer,
+      validatorPackage: classValidator,
     })
   );
 

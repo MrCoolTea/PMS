@@ -5,9 +5,9 @@ import {
   Button,
   Chip,
   CircularProgress,
-  MenuItem,
   Paper,
   Stack,
+  Switch,
   TextField,
   Typography,
 } from '@mui/material';
@@ -17,20 +17,21 @@ import { ui } from '../../styles/ui.js';
 
 const emptyForm = {
   title: '',
-  schedule: '',
   venue: '',
   host: '',
   capacity: '',
   bookings: '',
-  status: 'Scheduled',
+  imageUrl: '',
+  isActive: true,
 };
 
-const statusOptions = ['Scheduled', 'Draft', 'Completed', 'Cancelled'];
-
-function programColor(status) {
-  if (status === 'Scheduled') return 'success';
-  if (status === 'Draft') return 'warning';
-  return 'default';
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : '');
+    reader.onerror = () => reject(reader.error ?? new Error('Unable to read image file.'));
+    reader.readAsDataURL(file);
+  });
 }
 
 export function ProgramsPage() {
@@ -72,16 +73,37 @@ export function ProgramsPage() {
     setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
   }
 
+  function handleActiveChange(event) {
+    setForm((current) => ({ ...current, isActive: event.target.checked }));
+  }
+
+  function handleImageChange(event) {
+    const [file] = event.target.files ?? [];
+    event.target.value = '';
+
+    if (!file) {
+      return;
+    }
+
+    readFileAsDataUrl(file)
+      .then((value) => {
+        setForm((current) => ({ ...current, imageUrl: value }));
+      })
+      .catch(() => {
+        setError('Unable to read program image file.');
+      });
+  }
+
   function handleEdit(program) {
     setSelectedId(program.id);
     setForm({
       title: program.title ?? '',
-      schedule: program.schedule ?? '',
       venue: program.venue ?? '',
       host: program.host ?? '',
       capacity: String(program.capacity ?? ''),
       bookings: String(program.bookings ?? ''),
-      status: program.status ?? 'Scheduled',
+      imageUrl: program.imageUrl ?? '',
+      isActive: program.isActive ?? true,
     });
   }
 
@@ -97,12 +119,12 @@ export function ProgramsPage() {
 
     const payload = {
       title: form.title.trim(),
-      schedule: form.schedule.trim(),
       venue: form.venue.trim(),
       host: form.host.trim(),
       capacity: Number(form.capacity),
       bookings: Number(form.bookings || 0),
-      status: form.status,
+      imageUrl: form.imageUrl,
+      isActive: form.isActive,
     };
 
     try {
@@ -167,14 +189,14 @@ export function ProgramsPage() {
                   <Box>
                     <Typography sx={ui.rowTitle}>{program.title}</Typography>
                     <Typography sx={ui.rowCopy}>
-                      {program.schedule} • {program.venue}
+                      {program.venue}
                     </Typography>
                     <Typography sx={ui.rowCopy}>
                       {program.host} • {program.bookings}/{program.capacity} booked
                     </Typography>
                   </Box>
                   <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
-                    <Chip label={program.status} color={programColor(program.status)} />
+                    <Chip label={program.isActive ? 'Active' : 'Inactive'} color={program.isActive ? 'success' : 'default'} />
                     <Button variant="outlined" onClick={() => handleEdit(program)}>Edit</Button>
                     <Button variant="outlined" color="error" onClick={() => handleDelete(program.id)}>
                       Delete
@@ -192,16 +214,46 @@ export function ProgramsPage() {
           </Typography>
           <Stack component="form" spacing={2} sx={{ mt: 2.5 }} onSubmit={handleSubmit}>
             <TextField required label="Program Title" name="title" value={form.title} onChange={handleChange} />
-            <TextField required label="Schedule" name="schedule" value={form.schedule} onChange={handleChange} />
             <TextField required label="Venue" name="venue" value={form.venue} onChange={handleChange} />
             <TextField required label="Host Team" name="host" value={form.host} onChange={handleChange} />
             <TextField required label="Capacity" name="capacity" type="number" value={form.capacity} onChange={handleChange} />
             <TextField label="Bookings" name="bookings" type="number" value={form.bookings} onChange={handleChange} />
-            <TextField select label="Status" name="status" value={form.status} onChange={handleChange}>
-              {statusOptions.map((option) => (
-                <MenuItem key={option} value={option}>{option}</MenuItem>
-              ))}
-            </TextField>
+            <TextField
+              label="Program Image URL"
+              name="imageUrl"
+              value={form.imageUrl}
+              onChange={handleChange}
+              helperText="Paste an image URL or upload an image below."
+            />
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} alignItems={{ xs: 'stretch', sm: 'center' }}>
+              <Button component="label" variant="outlined">
+                Upload Program Image
+                <input hidden accept="image/*" type="file" onChange={handleImageChange} />
+              </Button>
+              <Button variant="text" color="inherit" onClick={() => setForm((current) => ({ ...current, imageUrl: '' }))}>
+                Clear Image
+              </Button>
+            </Stack>
+            {form.imageUrl ? (
+              <Box
+                component="img"
+                src={form.imageUrl}
+                alt="Program preview"
+                sx={{
+                  width: '100%',
+                  maxWidth: 320,
+                  height: 180,
+                  objectFit: 'cover',
+                  borderRadius: 2,
+                  border: '1px solid rgba(20, 55, 44, 0.12)',
+                  backgroundColor: '#fff',
+                }}
+              />
+            ) : null}
+            <Stack direction="row" spacing={1.5} alignItems="center">
+              <Switch checked={form.isActive} onChange={handleActiveChange} />
+              <Typography>{form.isActive ? 'Active on public Experiences page' : 'Inactive on public Experiences page'}</Typography>
+            </Stack>
             <Stack direction="row" spacing={1.5}>
               <Button type="submit" variant="contained" disabled={submitting}>
                 {selectedId ? 'Save Changes' : 'Save Program'}
