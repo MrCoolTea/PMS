@@ -9,6 +9,7 @@ const defaultSiteSettings = {
   checkInTime: '14:00',
   checkOutTime: '12:00',
   publicTheme: 'lagoon',
+  homePageDesign: 'spotlight',
   notifications: true,
   autoConfirmations: true,
 };
@@ -166,7 +167,8 @@ export class SiteService {
   private async applySiteSchemaCompatibility() {
     await this.prisma.$executeRawUnsafe(`
       ALTER TABLE "SiteSettings"
-      ADD COLUMN IF NOT EXISTS "publicTheme" TEXT NOT NULL DEFAULT 'lagoon';
+      ADD COLUMN IF NOT EXISTS "publicTheme" TEXT NOT NULL DEFAULT 'lagoon',
+      ADD COLUMN IF NOT EXISTS "homePageDesign" TEXT NOT NULL DEFAULT 'spotlight';
     `);
 
     await this.prisma.$executeRawUnsafe(`

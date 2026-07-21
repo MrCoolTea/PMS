@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Box, Stack, Typography } from '@mui/material';
 import VillaRoundedIcon from '@mui/icons-material/VillaRounded';
 import HotelRoundedIcon from '@mui/icons-material/HotelRounded';
@@ -10,7 +10,22 @@ import { usePublicDesign } from '../../context/PublicDesignContext.jsx';
 export function PublicNavbar() {
   const { data } = useResort();
   const { currentDesign } = usePublicDesign();
+  const location = useLocation();
   const content = data.siteContent ?? {};
+
+  function getNavItemStyle(isActive) {
+    return {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 8,
+      padding: '10px 14px',
+      textDecoration: 'none',
+      borderRadius: 999,
+      color: isActive ? currentDesign.accentStrong : currentDesign.textPrimary,
+      background: isActive ? currentDesign.accentSoft : 'transparent',
+      fontWeight: 700,
+    };
+  }
 
   return (
     <Box
@@ -87,58 +102,27 @@ export function PublicNavbar() {
               alignItems: 'center',
             }}
           >
-            <NavLink
+            <Link
               to="/"
-              end
-              style={({ isActive }) => ({
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 8,
-                padding: '10px 14px',
-                textDecoration: 'none',
-                borderRadius: 999,
-                color: isActive ? currentDesign.accentStrong : currentDesign.textPrimary,
-                background: isActive ? currentDesign.accentSoft : 'transparent',
-                fontWeight: 700,
-              })}
+              style={getNavItemStyle(location.pathname === '/' && !location.hash)}
             >
               <HotelRoundedIcon fontSize="small" />
               Stay
-            </NavLink>
-            <NavLink
-              to="/experiences"
-              style={({ isActive }) => ({
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 8,
-                padding: '10px 14px',
-                textDecoration: 'none',
-                borderRadius: 999,
-                color: isActive ? currentDesign.accentStrong : currentDesign.textPrimary,
-                background: isActive ? currentDesign.accentSoft : 'transparent',
-                fontWeight: 700,
-              })}
+            </Link>
+            <Link
+              to="/#experiences"
+              style={getNavItemStyle(location.hash === '#experiences')}
             >
               <LocalActivityRoundedIcon fontSize="small" />
               Experiences
-            </NavLink>
-            <NavLink
-              to="/book"
-              style={({ isActive }) => ({
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 8,
-                padding: '10px 14px',
-                textDecoration: 'none',
-                borderRadius: 999,
-                color: isActive ? currentDesign.accentStrong : currentDesign.textPrimary,
-                background: isActive ? currentDesign.accentSoft : 'transparent',
-                fontWeight: 700,
-              })}
+            </Link>
+            <Link
+              to="/#booking"
+              style={getNavItemStyle(location.hash === '#booking')}
             >
               <CalendarMonthRoundedIcon fontSize="small" />
               Book Now
-            </NavLink>
+            </Link>
           </Stack>
         </Stack>
       </Stack>

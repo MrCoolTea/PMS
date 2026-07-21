@@ -1,19 +1,29 @@
 import { useEffect, useState } from 'react';
 import { Box, Button, Chip, Paper, Stack, Typography } from '@mui/material';
 import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
+import { getHomePageDesignById } from '../../components/public/homePageDesigns.js';
 import { useResort } from '../../context/ResortContext.jsx';
 import { usePublicDesign } from '../../context/PublicDesignContext.jsx';
+import { ExperiencesPage } from './ExperiencesPage.jsx';
+import { BookingPage } from './BookingPage.jsx';
 
 export function HomePage() {
   const { data } = useResort();
   const { currentDesign, mode } = usePublicDesign();
+  const [searchParams] = useSearchParams();
   const featuredRooms = data.rooms.slice(0, 3);
   const social = data.socialMedia.slice(0, 3);
   const content = data.siteContent ?? {};
   const [activeSlide, setActiveSlide] = useState(0);
+  const previewHomeDesign = searchParams.get('previewHomeDesign');
+  const homePageDesign = getHomePageDesignById(previewHomeDesign ?? data.settings?.homePageDesign);
 
   useEffect(() => {
+    if (featuredRooms.length === 0) {
+      return undefined;
+    }
+
     const intervalId = window.setInterval(() => {
       setActiveSlide((current) => (current + 1) % featuredRooms.length);
     }, 4200);
@@ -24,22 +34,22 @@ export function HomePage() {
   const slide = featuredRooms[activeSlide] ?? featuredRooms[0];
   const heroImageUrl = content.heroImageUrl || slide?.image;
   const isBackgroundHero =
-    currentDesign.heroImageMode === 'background' || currentDesign.heroImageMode === 'background-soft';
-  const isCenteredHero = currentDesign.heroLayout === 'centered' || currentDesign.heroLayout === 'stacked';
+    homePageDesign.heroImageMode === 'background' || homePageDesign.heroImageMode === 'background-soft';
+  const isCenteredHero = homePageDesign.heroLayout === 'centered' || homePageDesign.heroLayout === 'stacked';
   const heroColumns =
-    currentDesign.heroLayout === 'wide'
+    homePageDesign.heroLayout === 'wide'
       ? { xs: '1fr', xl: '1.2fr 0.8fr' }
-      : currentDesign.heroLayout === 'reverse'
+      : homePageDesign.heroLayout === 'reverse'
         ? { xs: '1fr', xl: '420px minmax(0, 1fr)' }
-        : currentDesign.heroLayout === 'asymmetric'
+        : homePageDesign.heroLayout === 'asymmetric'
           ? { xs: '1fr', xl: '0.85fr 1.15fr' }
-          : currentDesign.heroLayout === 'stacked' || currentDesign.heroLayout === 'centered'
+          : homePageDesign.heroLayout === 'stacked' || homePageDesign.heroLayout === 'centered'
             ? { xs: '1fr' }
             : { xs: '1fr', xl: 'minmax(0, 1fr) 420px' };
   const detailsOrder =
-    currentDesign.heroLayout === 'reverse' || currentDesign.heroLayout === 'asymmetric' ? 2 : 1;
+    homePageDesign.heroLayout === 'reverse' || homePageDesign.heroLayout === 'asymmetric' ? 2 : 1;
   const mediaOrder =
-    currentDesign.heroLayout === 'reverse' || currentDesign.heroLayout === 'asymmetric' ? 1 : 2;
+    homePageDesign.heroLayout === 'reverse' || homePageDesign.heroLayout === 'asymmetric' ? 1 : 2;
   const quickStats = [
     {
       title: 'Room Types',
@@ -62,7 +72,7 @@ export function HomePage() {
           borderRadius: `${currentDesign.radiusHero}px`,
           border: currentDesign.panelBorder,
           background: isBackgroundHero
-            ? `${currentDesign.heroBackground}, linear-gradient(0deg, rgba(0,0,0,${currentDesign.heroImageMode === 'background' ? 0.28 : 0.1}), rgba(0,0,0,${currentDesign.heroImageMode === 'background' ? 0.28 : 0.1})), url("${heroImageUrl}")`
+            ? `${currentDesign.heroBackground}, linear-gradient(0deg, rgba(0,0,0,${homePageDesign.heroImageMode === 'background' ? 0.28 : 0.1}), rgba(0,0,0,${homePageDesign.heroImageMode === 'background' ? 0.28 : 0.1})), url("${heroImageUrl}")`
             : currentDesign.heroBackground,
           backgroundSize: isBackgroundHero ? 'cover' : 'auto',
           backgroundPosition: isBackgroundHero ? 'center' : 'initial',
@@ -84,7 +94,7 @@ export function HomePage() {
           <Box
             sx={{
               order: detailsOrder,
-              textAlign: currentDesign.heroTextAlign,
+              textAlign: homePageDesign.heroTextAlign,
               mx: isCenteredHero ? 'auto' : 0,
               maxWidth: isCenteredHero ? 760 : 'none',
             }}
@@ -113,13 +123,15 @@ export function HomePage() {
                 fontSize: {
                   xs: '3rem',
                   md:
-                    mode === 'festival'
-                      ? '5.6rem'
-                      : currentDesign.heroLayout === 'centered'
+                    homePageDesign.titleSize === 'large'
+                      ? '5.2rem'
+                      : homePageDesign.titleSize === 'editorial'
+                        ? '5rem'
+                        : homePageDesign.heroLayout === 'centered'
                         ? '5.2rem'
                         : '4.8rem',
                 },
-                textTransform: mode === 'festival' ? 'uppercase' : 'none',
+                textTransform: homePageDesign.titleSize === 'large' ? 'uppercase' : 'none',
                 letterSpacing: mode === 'editorial' ? '-0.05em' : 'normal',
                 mx: isCenteredHero ? 'auto' : 0,
               }}
@@ -144,7 +156,7 @@ export function HomePage() {
             >
               <Button
                 component={Link}
-                to="/book"
+                to="/#booking"
                 variant="contained"
                 size="large"
                 sx={{
@@ -160,7 +172,7 @@ export function HomePage() {
               </Button>
               <Button
                 component={Link}
-                to="/experiences"
+                to="/#experiences"
                 variant="outlined"
                 size="large"
                 sx={{
@@ -198,11 +210,11 @@ export function HomePage() {
                 borderRadius: `${currentDesign.radiusPanel}px`,
                 background: currentDesign.heroSecondary,
                 color: currentDesign.footerText,
-                minHeight: currentDesign.heroMinHeight,
+                minHeight: homePageDesign.heroMinHeight,
                 display: 'grid',
                 alignContent: 'space-between',
-                ml: currentDesign.heroImageMode === 'edge' ? { xl: -2 } : 0,
-                mr: currentDesign.heroLayout === 'reverse' ? { xl: -2 } : 0,
+                ml: homePageDesign.heroImageMode === 'edge' ? { xl: -2 } : 0,
+                mr: homePageDesign.heroLayout === 'reverse' ? { xl: -2 } : 0,
               }}
             >
               <Box
@@ -211,7 +223,7 @@ export function HomePage() {
                 alt={content.homeHeadline ?? `${data.resort.name} hero`}
                 sx={{
                   width: '100%',
-                  height: currentDesign.heroImageHeight,
+                  height: homePageDesign.heroImageHeight,
                   objectFit: 'cover',
                   borderRadius: `${Math.max(currentDesign.radiusCard - 2, 12)}px`,
                   mb: 2,
@@ -255,9 +267,9 @@ export function HomePage() {
         sx={{
           display: 'grid',
           gridTemplateColumns:
-            currentDesign.statsLayout === 'feature'
+            homePageDesign.statsLayout === 'feature'
               ? { xs: '1fr', md: '1.3fr 0.7fr' }
-              : currentDesign.statsLayout === 'strip'
+              : homePageDesign.statsLayout === 'strip'
                 ? { xs: '1fr', lg: 'repeat(2, minmax(0, 1fr))' }
                 : { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
           gap: 2.25,
@@ -287,11 +299,11 @@ export function HomePage() {
         sx={{
           display: 'grid',
           gridTemplateColumns:
-            currentDesign.sectionLayout === 'stack'
+            homePageDesign.sectionLayout === 'stack'
               ? { xs: '1fr' }
-              : currentDesign.sectionLayout === 'reverse'
+              : homePageDesign.sectionLayout === 'reverse'
                 ? { xs: '1fr', xl: '0.9fr 1.1fr' }
-                : currentDesign.sectionLayout === 'mosaic'
+                : homePageDesign.sectionLayout === 'mosaic'
                   ? { xs: '1fr', xl: '0.95fr 1.05fr' }
                   : { xs: '1fr', xl: '1.1fr 0.9fr' },
           gap: 2.25,
@@ -304,7 +316,7 @@ export function HomePage() {
             borderRadius: `${currentDesign.radiusPanel}px`,
             border: currentDesign.panelBorder,
             background: currentDesign.panelBackground,
-            order: currentDesign.sectionLayout === 'reverse' ? 2 : 1,
+            order: homePageDesign.roomsSectionOrder,
           }}
         >
           <Typography variant="h4" sx={{ fontWeight: 700, color: currentDesign.textPrimary, fontFamily: currentDesign.titleFontFamily }}>
@@ -355,7 +367,7 @@ export function HomePage() {
             borderRadius: `${currentDesign.radiusPanel}px`,
             border: currentDesign.panelBorder,
             background: currentDesign.panelBackground,
-            order: currentDesign.sectionLayout === 'reverse' ? 1 : 2,
+            order: homePageDesign.socialSectionOrder,
           }}
         >
           <Typography variant="h4" sx={{ fontWeight: 700, color: currentDesign.textPrimary, fontFamily: currentDesign.titleFontFamily }}>
@@ -396,6 +408,14 @@ export function HomePage() {
             ))}
           </Stack>
         </Paper>
+      </Box>
+
+      <Box id="experiences">
+        <ExperiencesPage />
+      </Box>
+
+      <Box id="booking">
+        <BookingPage />
       </Box>
     </Stack>
   );

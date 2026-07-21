@@ -26,6 +26,10 @@ export class UpdateSiteSettingsDto {
   publicTheme?: string;
 
   @IsOptional()
+  @IsString()
+  homePageDesign?: string;
+
+  @IsOptional()
   @IsBoolean()
   notifications?: boolean;
 

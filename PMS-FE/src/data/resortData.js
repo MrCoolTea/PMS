@@ -336,6 +336,7 @@ export const initialResortData = {
     checkInTime: '14:00',
     checkOutTime: '12:00',
     publicTheme: 'lagoon',
+    homePageDesign: 'spotlight',
     notifications: true,
     autoConfirmations: true,
   },

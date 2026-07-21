@@ -2,8 +2,6 @@ import { Navigate, createBrowserRouter } from 'react-router-dom';
 import { RootLayout } from './layouts/RootLayout.jsx';
 import { PublicLayout } from './layouts/public/PublicLayout.jsx';
 import { HomePage } from './pages/public/HomePage.jsx';
-import { BookingPage } from './pages/public/BookingPage.jsx';
-import { ExperiencesPage } from './pages/public/ExperiencesPage.jsx';
 import { LoginPage } from './pages/login/page.jsx';
 import { DashboardLayout } from './layouts/dashboard/DashboardLayout.jsx';
 import { DashboardPage } from './pages/dashboard/page.jsx';
@@ -18,6 +16,10 @@ import { FilesPage } from './pages/files/page.jsx';
 import { SettingsPage } from './pages/settings/page.jsx';
 import { IntegrationsPage } from './pages/integrations/page.jsx';
 import { WebsitePage } from './pages/website/page.jsx';
+
+function RedirectToPublicSection({ hash }) {
+  return <Navigate to={`/${hash}`} replace />;
+}
 
 const router = createBrowserRouter([
   {
@@ -37,7 +39,7 @@ const router = createBrowserRouter([
           },
           {
             path: 'book',
-            element: <BookingPage />,
+            element: <RedirectToPublicSection hash="#booking" />,
             handle: {
               title: 'Book',
               description: 'Reserve rooms and plan your stay.',
@@ -45,7 +47,7 @@ const router = createBrowserRouter([
           },
           {
             path: 'experiences',
-            element: <ExperiencesPage />,
+            element: <RedirectToPublicSection hash="#experiences" />,
             handle: {
               title: 'Experiences',
               description: 'Browse resort activities and guest programs.',

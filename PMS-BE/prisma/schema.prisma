@@ -159,6 +159,7 @@ model SiteSettings {
   checkInTime       String
   checkOutTime      String
   publicTheme       String   @default("lagoon")
+  homePageDesign    String   @default("spotlight")
   notifications     Boolean  @default(true)
   autoConfirmations Boolean  @default(true)
   createdAt         DateTime @default(now())

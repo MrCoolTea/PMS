@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import { useAuth } from '../../context/AuthContext.jsx';
 import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
+import { homePageDesigns } from '../../components/public/homePageDesigns.js';
 import { publicDesignModes } from '../../context/PublicDesignContext.jsx';
 import {
   getSiteContent,
@@ -48,6 +49,7 @@ const emptyContent = {
 
 const emptySettings = {
   publicTheme: 'lagoon',
+  homePageDesign: 'spotlight',
 };
 
 function toEditableContent(content) {
@@ -97,6 +99,7 @@ export function WebsitePage() {
         setForm(toEditableContent(content));
         setSettings({
           publicTheme: nextSettings.publicTheme ?? 'lagoon',
+          homePageDesign: nextSettings.homePageDesign ?? 'spotlight',
         });
       } catch (loadError) {
         if (active) setError(loadError.message);
@@ -115,6 +118,10 @@ export function WebsitePage() {
 
   function handleThemeSelect(themeId) {
     setSettings((current) => ({ ...current, publicTheme: themeId }));
+  }
+
+  function handleHomePageDesignSelect(designId) {
+    setSettings((current) => ({ ...current, homePageDesign: designId }));
   }
 
   function handleImageChange(fieldName) {
@@ -161,7 +168,7 @@ export function WebsitePage() {
     }
   }
 
-  const previewUrl = `${previewPath}?previewDesign=${encodeURIComponent(settings.publicTheme)}`;
+  const previewUrl = `${previewPath}?previewDesign=${encodeURIComponent(settings.publicTheme)}&previewHomeDesign=${encodeURIComponent(settings.homePageDesign)}`;
 
   return (
     <Stack spacing={3}>
@@ -207,7 +214,7 @@ export function WebsitePage() {
                 startIcon={<VisibilityRoundedIcon />}
                 onClick={() => setPreviewOpen(true)}
               >
-                Preview Theme
+                Preview Website
               </Button>
             </Stack>
             <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" sx={{ mt: 2 }}>
@@ -222,6 +229,24 @@ export function WebsitePage() {
                 />
               ))}
             </Stack>
+            <Box sx={{ mt: 2.5 }}>
+              <Typography sx={ui.panelTitle}>Homepage Layout</Typography>
+              <Typography sx={ui.panelCopy}>
+                Choose one shared homepage layout. This applies to all public design modes.
+              </Typography>
+              <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" sx={{ mt: 1.5 }}>
+                {homePageDesigns.map((design) => (
+                  <Chip
+                    key={design.id}
+                    label={design.label}
+                    onClick={() => handleHomePageDesignSelect(design.id)}
+                    color={settings.homePageDesign === design.id ? 'primary' : 'default'}
+                    variant={settings.homePageDesign === design.id ? 'filled' : 'outlined'}
+                    sx={{ fontWeight: 700 }}
+                  />
+                ))}
+              </Stack>
+            </Box>
           </Paper>
           <TextField label="Resort Name" name="name" value={form.name} onChange={handleChange} />
           <TextField
@@ -333,7 +358,10 @@ export function WebsitePage() {
                 <Tab value="/experiences" label="Experiences" />
                 <Tab value="/book" label="Booking" />
               </Tabs>
-              <Chip label={`Theme: ${publicDesignModes.find((item) => item.id === settings.publicTheme)?.label ?? settings.publicTheme}`} />
+              <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                <Chip label={`Theme: ${publicDesignModes.find((item) => item.id === settings.publicTheme)?.label ?? settings.publicTheme}`} />
+                <Chip label={`Home: ${homePageDesigns.find((item) => item.id === settings.homePageDesign)?.label ?? settings.homePageDesign}`} />
+              </Stack>
             </Stack>
 
             <Box

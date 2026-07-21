@@ -1,4 +1,5 @@
-import { Outlet } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import { Box } from '@mui/material';
 import { ResortProvider } from '../../context/ResortContext.jsx';
 import { PublicDesignProvider, usePublicDesign } from '../../context/PublicDesignContext.jsx';
@@ -7,6 +8,25 @@ import { PublicFooter } from '../../components/public/PublicFooter.jsx';
 
 function PublicFrame() {
   const { currentDesign } = usePublicDesign();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!location.hash) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    const targetId = location.hash.replace('#', '');
+    const scrollToTarget = () => {
+      const target = document.getElementById(targetId);
+
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+
+    window.setTimeout(scrollToTarget, 60);
+  }, [location.hash, location.pathname]);
 
   return (
     <Box
