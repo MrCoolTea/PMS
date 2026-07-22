@@ -16,22 +16,26 @@ import {
   Typography,
 } from '@mui/material';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { useResort } from '../../context/ResortContext.jsx';
 import { createRoom, deleteRoom, listRooms, updateRoom } from '../../lib/rooms.js';
 import { ui } from '../../styles/ui.js';
+import { formatCurrency } from '../../utils/currency.js';
 
 const emptyForm = {
   name: '',
-  type: '',
+  type: 'Standard',
   capacity: '',
   rate: '',
-  floor: '',
-  amenities: '',
+  floor: 'Main',
+  amenities: 'Included',
   image: '',
   imageName: '',
   status: 'Available',
 };
 
 const statusOptions = ['Available', 'Reserved', 'Occupied', 'Maintenance'];
+const acceptedImageTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+const maxImageSizeInBytes = 5 * 1024 * 1024;
 
 function roomColor(status) {
   if (status === 'Occupied') return 'error';
@@ -56,15 +60,19 @@ function mapRoomToForm(room) {
 
 export function RoomsPage() {
   const { accessToken } = useAuth();
+  const { data } = useResort();
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [dialogMode, setDialogMode] = useState('create');
   const [selectedRoomId, setSelectedRoomId] = useState(null);
+  const [roomPendingDelete, setRoomPendingDelete] = useState(null);
   const [form, setForm] = useState(emptyForm);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [deletingRoomId, setDeletingRoomId] = useState(null);
+  const currency = data.settings?.currency;
 
   useEffect(() => {
     let active = true;
@@ -127,6 +135,21 @@ export function RoomsPage() {
     setOpen(true);
   }
 
+  function openDeleteDialog(room) {
+    setError('');
+    setRoomPendingDelete(room);
+    setDeleteDialogOpen(true);
+  }
+
+  function closeDeleteDialog() {
+    if (deletingRoomId) {
+      return;
+    }
+
+    setDeleteDialogOpen(false);
+    setRoomPendingDelete(null);
+  }
+
   function handleChange(event) {
     setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
   }
@@ -138,9 +161,22 @@ export function RoomsPage() {
       return;
     }
 
+    if (!acceptedImageTypes.includes(file.type)) {
+      setError('Room image must be a JPG, PNG, WEBP, or GIF file.');
+      event.target.value = '';
+      return;
+    }
+
+    if (file.size > maxImageSizeInBytes) {
+      setError('Room image must be 5 MB or smaller.');
+      event.target.value = '';
+      return;
+    }
+
     const reader = new FileReader();
 
     reader.onload = () => {
+      setError('');
       setForm((current) => ({
         ...current,
         image: typeof reader.result === 'string' ? reader.result : '',
@@ -186,18 +222,18 @@ export function RoomsPage() {
     }
   }
 
-  async function handleDelete(room) {
-    const confirmed = window.confirm(`Delete room "${room.name}"?`);
-
-    if (!confirmed) {
+  async function handleDelete() {
+    if (!roomPendingDelete) {
       return;
     }
 
     try {
       setError('');
-      setDeletingRoomId(room.id);
-      await deleteRoom(accessToken, room.id);
-      setRooms((current) => current.filter((entry) => entry.id !== room.id));
+      setDeletingRoomId(roomPendingDelete.id);
+      await deleteRoom(accessToken, roomPendingDelete.id);
+      setRooms((current) => current.filter((entry) => entry.id !== roomPendingDelete.id));
+      setDeleteDialogOpen(false);
+      setRoomPendingDelete(null);
     } catch (deleteError) {
       setError(deleteError.message);
     } finally {
@@ -249,21 +285,23 @@ export function RoomsPage() {
             {rooms.map((room) => (
               <Box key={room.id} sx={{ ...ui.recordCard, ...ui.roomCard }}>
                 <Box sx={ui.roomCardMain}>
-                  {room.image ? (
-                    <Box
-                      component="img"
-                      src={room.image}
-                      alt={room.name}
-                      sx={ui.roomCardImage}
-                    />
-                  ) : null}
+                  <Box sx={ui.roomCardMedia}>
+                    {room.image ? (
+                      <Box
+                        component="img"
+                        src={room.image}
+                        alt={room.name}
+                        sx={ui.roomCardImage}
+                      />
+                    ) : (
+                      <Typography sx={ui.rowCopy}>No image</Typography>
+                    )}
+                  </Box>
                   <Typography sx={ui.rowTitle}>{room.name}</Typography>
-                  <Typography sx={ui.rowCopy}>
-                    {room.type} • {room.floor}
-                  </Typography>
                   <Typography sx={ui.rowCopy}>{room.capacity} guests</Typography>
-                  <Typography sx={ui.rowCopy}>${room.rate}/night</Typography>
-                  <Typography sx={ui.rowCopy}>{room.amenities}</Typography>
+                  <Typography sx={ui.rowCopy}>
+                    {formatCurrency(room.rate, currency)}/night
+                  </Typography>
                 </Box>
 
                 <Stack direction="row" spacing={1} justifyContent="space-between" alignItems="center">
@@ -275,7 +313,7 @@ export function RoomsPage() {
                     <Button
                       size="small"
                       color="error"
-                      onClick={() => handleDelete(room)}
+                      onClick={() => openDeleteDialog(room)}
                       disabled={deletingRoomId === room.id}
                     >
                       {deletingRoomId === room.id ? 'Deleting...' : 'Delete'}
@@ -305,13 +343,6 @@ export function RoomsPage() {
                 required
               />
               <TextField
-                label="Type"
-                name="type"
-                value={form.type}
-                onChange={handleChange}
-                required
-              />
-              <TextField
                 label="Capacity"
                 name="capacity"
                 type="number"
@@ -330,13 +361,6 @@ export function RoomsPage() {
                 required
               />
               <TextField
-                label="Area / Wing"
-                name="floor"
-                value={form.floor}
-                onChange={handleChange}
-                required
-              />
-              <TextField
                 select
                 label="Status"
                 name="status"
@@ -350,15 +374,6 @@ export function RoomsPage() {
                   </MenuItem>
                 ))}
               </TextField>
-              <TextField
-                label="Amenities"
-                name="amenities"
-                value={form.amenities}
-                onChange={handleChange}
-                multiline
-                minRows={2}
-                required
-              />
               <Stack spacing={1}>
                 <Button component="label" variant="outlined">
                   Upload Room Image
@@ -393,6 +408,28 @@ export function RoomsPage() {
             </Button>
           </DialogActions>
         </Stack>
+      </Dialog>
+
+      <Dialog open={deleteDialogOpen} onClose={closeDeleteDialog} fullWidth maxWidth="xs">
+        <DialogTitle>Delete Room</DialogTitle>
+        <DialogContent dividers>
+          <Typography>
+            Delete room "{roomPendingDelete?.name}" from the inventory?
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, py: 2 }}>
+          <Button onClick={closeDeleteDialog} disabled={Boolean(deletingRoomId)}>
+            Cancel
+          </Button>
+          <Button
+            color="error"
+            variant="contained"
+            onClick={handleDelete}
+            disabled={Boolean(deletingRoomId)}
+          >
+            {deletingRoomId ? 'Deleting...' : 'Delete Room'}
+          </Button>
+        </DialogActions>
       </Dialog>
     </Stack>
   );

@@ -15,9 +15,11 @@ import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
 import EventAvailableRoundedIcon from '@mui/icons-material/EventAvailableRounded';
 import { useResort } from '../../context/ResortContext.jsx';
 import { ui } from '../../styles/ui.js';
+import { formatCurrency } from '../../utils/currency.js';
 
 export function DashboardPage() {
   const { data } = useResort();
+  const currency = data.settings?.currency;
 
   const totalRooms = data.rooms.length;
   const occupiedRooms = data.rooms.filter((room) => room.status === 'Occupied').length;
@@ -44,7 +46,7 @@ export function DashboardPage() {
     },
     {
       title: 'Payments Logged',
-      value: `$${totalRevenue.toLocaleString()}`,
+      value: formatCurrency(totalRevenue, currency),
       note: `${data.payments.length} transactions`,
       icon: <PaymentsRoundedIcon fontSize="small" />,
     },
@@ -136,7 +138,9 @@ export function DashboardPage() {
                   </Typography>
                 </Box>
                 <Box sx={ui.rowMeta}>
-                  <Typography sx={ui.rowStrong}>${reservation.total}</Typography>
+                  <Typography sx={ui.rowStrong}>
+                    {formatCurrency(reservation.total, currency)}
+                  </Typography>
                   <Typography sx={ui.rowCopy}>
                     {reservation.source} • {reservation.status}
                   </Typography>

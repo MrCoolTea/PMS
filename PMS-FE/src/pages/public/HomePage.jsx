@@ -5,12 +5,14 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { getHomePageDesignById } from '../../components/public/homePageDesigns.js';
 import { useResort } from '../../context/ResortContext.jsx';
 import { usePublicDesign } from '../../context/PublicDesignContext.jsx';
+import { formatCurrency } from '../../utils/currency.js';
 import { ExperiencesPage } from './ExperiencesPage.jsx';
 import { BookingPage } from './BookingPage.jsx';
 
 export function HomePage() {
   const { data } = useResort();
   const { currentDesign, mode } = usePublicDesign();
+  const currency = data.settings?.currency;
   const [searchParams] = useSearchParams();
   const featuredRooms = data.rooms.slice(0, 3);
   const social = data.socialMedia.slice(0, 3);
@@ -63,7 +65,7 @@ export function HomePage() {
     },
   ];
 
-  return (
+  return (  
     <Stack spacing={3.5}>
       <Paper
         elevation={0}
@@ -236,7 +238,9 @@ export function HomePage() {
                   </Typography>
                   <Typography sx={{ fontWeight: 700, fontSize: '1.2rem' }}>{slide?.name}</Typography>
                 </Box>
-                <Typography sx={{ fontWeight: 700 }}>${slide?.rate}/night</Typography>
+                <Typography sx={{ fontWeight: 700 }}>
+                  {formatCurrency(slide?.rate, currency)}/night
+                </Typography>
               </Stack>
               <Typography sx={{ opacity: 0.82 }}>
                 {slide?.type} • {slide?.capacity} guests • {slide?.amenities}
@@ -338,14 +342,56 @@ export function HomePage() {
                   flexDirection: { xs: 'column', sm: 'row' },
                 }}
               >
-                <Box>
-                  <Typography sx={{ fontWeight: 700, color: currentDesign.textPrimary }}>{room.name}</Typography>
-                  <Typography sx={{ color: currentDesign.textSecondary }}>
-                    {room.type} • {room.capacity} guests • {room.amenities}
+                <Stack
+                  direction={{ xs: 'column', sm: 'row' }}
+                  spacing={2}
+                  alignItems={{ xs: 'flex-start', sm: 'center' }}
+                  sx={{ flex: 1, minWidth: 0 }}
+                >
+                  <Box
+                    sx={{
+                      width: { xs: '100%', sm: 132 },
+                      minWidth: { sm: 132 },
+                      height: 96,
+                      borderRadius: `${Math.max(currentDesign.radiusCard - 6, 12)}px`,
+                      overflow: 'hidden',
+                      border: currentDesign.cardBorder,
+                      background: currentDesign.heroBackground,
+                    }}
+                  >
+                    {room.image ? (
+                      <Box
+                        component="img"
+                        src={room.image}
+                        alt={room.name}
+                        sx={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          display: 'block',
+                        }}
+                      />
+                    ) : null}
+                  </Box>
+
+                  <Box sx={{ minWidth: 0 }}>
+                    <Typography sx={{ fontWeight: 700, color: currentDesign.textPrimary }}>
+                      {room.name}
+                    </Typography>
+                    <Typography sx={{ color: currentDesign.textSecondary }}>
+                      {room.type} • {room.capacity} guests • {room.amenities}
+                    </Typography>
+                  </Box>
+                </Stack>
+
+                <Stack
+                  alignItems={{ xs: 'flex-start', sm: 'flex-end' }}
+                  spacing={1}
+                  sx={{ width: { xs: '100%', sm: 'auto' } }}
+                >
+                  <Typography sx={{ fontWeight: 700, color: currentDesign.textPrimary }}>
+                    {formatCurrency(room.rate, currency)}/night
                   </Typography>
-                </Box>
-                <Stack alignItems="flex-end" spacing={1}>
-                  <Typography sx={{ fontWeight: 700, color: currentDesign.textPrimary }}>${room.rate}/night</Typography>
                   <Chip
                     label={room.status}
                     sx={{

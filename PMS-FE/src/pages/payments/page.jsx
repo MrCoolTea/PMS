@@ -12,8 +12,10 @@ import {
   Typography,
 } from '@mui/material';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { useResort } from '../../context/ResortContext.jsx';
 import { createPayment, deletePayment, listPayments, updatePayment } from '../../lib/payments.js';
 import { ui } from '../../styles/ui.js';
+import { formatCurrency } from '../../utils/currency.js';
 
 const emptyForm = {
   guest: '',
@@ -35,11 +37,13 @@ function paymentColor(status) {
 
 export function PaymentsPage() {
   const { accessToken } = useAuth();
+  const { data } = useResort();
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [form, setForm] = useState(emptyForm);
   const [selectedId, setSelectedId] = useState(null);
+  const currency = data.settings?.currency;
 
   const totalCollected = payments.reduce((sum, payment) => sum + Number(payment.amount), 0);
 
@@ -146,7 +150,9 @@ export function PaymentsPage() {
       <Box sx={ui.statsGrid(2)}>
         <Paper sx={ui.statCard} elevation={0}>
           <Typography sx={ui.statTitle}>Total Collected</Typography>
-          <Typography variant="h4" sx={ui.statValue}>${totalCollected.toLocaleString()}</Typography>
+          <Typography variant="h4" sx={ui.statValue}>
+            {formatCurrency(totalCollected, currency)}
+          </Typography>
         </Paper>
         <Paper sx={ui.statCard} elevation={0}>
           <Typography sx={ui.statTitle}>Partial Payments</Typography>
@@ -170,7 +176,9 @@ export function PaymentsPage() {
               {payments.map((payment) => (
                 <Box key={payment.id} sx={ui.recordCard}>
                   <Box>
-                    <Typography sx={ui.rowTitle}>{payment.guest} • ${payment.amount}</Typography>
+                    <Typography sx={ui.rowTitle}>
+                      {payment.guest} • {formatCurrency(payment.amount, currency)}
+                    </Typography>
                     <Typography sx={ui.rowCopy}>{payment.reservation} • {payment.source}</Typography>
                     <Typography sx={ui.rowCopy}>{payment.method} • {payment.paidDate}</Typography>
                   </Box>

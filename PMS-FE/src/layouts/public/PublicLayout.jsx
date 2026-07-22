@@ -1,14 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Box } from '@mui/material';
-import { ResortProvider } from '../../context/ResortContext.jsx';
+import { ResortProvider, useResort } from '../../context/ResortContext.jsx';
 import { PublicDesignProvider, usePublicDesign } from '../../context/PublicDesignContext.jsx';
 import { PublicNavbar } from '../../components/public/PublicNavbar.jsx';
 import { PublicFooter } from '../../components/public/PublicFooter.jsx';
+import { PublicSiteLoader } from '../../components/public/PublicSiteLoader.jsx';
 
 function PublicFrame() {
-  const { currentDesign } = usePublicDesign();
+  const { loading } = useResort();
+  const { currentDesign, previewMode } = usePublicDesign();
   const location = useLocation();
+  const [loaderDelayComplete, setLoaderDelayComplete] = useState(false);
 
   useEffect(() => {
     if (!location.hash) {
@@ -27,6 +30,20 @@ function PublicFrame() {
 
     window.setTimeout(scrollToTarget, 60);
   }, [location.hash, location.pathname]);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setLoaderDelayComplete(true);
+    }, 3000);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, []);
+
+  if ((!loaderDelayComplete || loading) && !previewMode) {
+    return <PublicSiteLoader design={currentDesign} />;
+  }
 
   return (
     <Box

@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import canopyRetreatMode from '../components/public/design-modes/CanopyRetreatMode.jsx';
 import editorialEscapeMode from '../components/public/design-modes/EditorialEscapeMode.jsx';
@@ -10,7 +10,7 @@ import zenCourtyardMode from '../components/public/design-modes/ZenCourtyardMode
 import { useResort } from './ResortContext.jsx';
 
 const baseBehavior = {
-  mainWidth: 1240,
+  mainWidth: 1740,
   heroLayout: 'split',
   heroTextAlign: 'left',
   heroImageMode: 'panel',
@@ -40,17 +40,49 @@ export const publicDesignModes = rawPublicDesignModes.map(defineMode);
 
 const fallbackMode = publicDesignModes[0];
 const PublicDesignContext = createContext(null);
+const publicThemeStorageKey = 'pms-public-theme';
+
+function readCachedPublicTheme() {
+  try {
+    return window.localStorage.getItem(publicThemeStorageKey);
+  } catch (error) {
+    return null;
+  }
+}
+
+function persistCachedPublicTheme(modeId) {
+  if (!modeId) {
+    return;
+  }
+
+  try {
+    window.localStorage.setItem(publicThemeStorageKey, modeId);
+  } catch (error) {
+    // Ignore storage errors in private/incognito contexts.
+  }
+}
 
 export function getPublicDesignModeById(modeId) {
   return publicDesignModes.find((item) => item.id === modeId) ?? fallbackMode;
 }
 
 export function PublicDesignProvider({ children }) {
-  const { data } = useResort();
+  const { data, loading } = useResort();
   const [searchParams] = useSearchParams();
+  const [cachedMode, setCachedMode] = useState(() => readCachedPublicTheme());
   const previewMode = searchParams.get('previewDesign');
-  const storedMode = data.settings?.publicTheme;
-  const mode = getPublicDesignModeById(previewMode ?? storedMode).id;
+  const fetchedMode = data.settings?.publicTheme;
+  const resolvedMode = previewMode ?? (loading ? cachedMode ?? fetchedMode : fetchedMode ?? cachedMode);
+  const mode = getPublicDesignModeById(resolvedMode).id;
+
+  useEffect(() => {
+    if (previewMode || !fetchedMode) {
+      return;
+    }
+
+    setCachedMode(fetchedMode);
+    persistCachedPublicTheme(fetchedMode);
+  }, [fetchedMode, previewMode]);
 
   const value = useMemo(() => {
     const currentDesign = getPublicDesignModeById(mode);

@@ -3,6 +3,7 @@ import {
   Alert,
   Button,
   FormControlLabel,
+  MenuItem,
   Paper,
   Stack,
   Switch,
@@ -22,6 +23,17 @@ const emptySettings = {
   notifications: true,
   autoConfirmations: true,
 };
+
+const currencyOptions = [
+  { value: 'PHP', label: 'Philippine Peso (PHP)' },
+  { value: 'USD', label: 'US Dollar (USD)' },
+  { value: 'EUR', label: 'Euro (EUR)' },
+  { value: 'GBP', label: 'British Pound (GBP)' },
+  { value: 'JPY', label: 'Japanese Yen (JPY)' },
+  { value: 'AUD', label: 'Australian Dollar (AUD)' },
+  { value: 'CAD', label: 'Canadian Dollar (CAD)' },
+  { value: 'SGD', label: 'Singapore Dollar (SGD)' },
+];
 
 function toEditableSettings(settings) {
   return {
@@ -89,7 +101,7 @@ export function SettingsPage() {
         <Typography sx={ui.eyebrow}>Settings</Typography>
         <Typography variant="h3" sx={ui.heroTitle}>Resort operations configuration</Typography>
         <Typography sx={ui.heroCopy}>
-          Configure check-in rules, timezone, currency, and guest notification behavior.
+          Configure resort identity, timezone, currency, and guest notification behavior.
         </Typography>
       </Paper>
 
@@ -99,10 +111,20 @@ export function SettingsPage() {
         {saved ? <Alert severity="success" sx={{ mt: 2.5 }}>{saved}</Alert> : null}
         <Stack component="form" spacing={2} sx={{ mt: 2.5, maxWidth: 720 }} onSubmit={handleSubmit}>
           <TextField label="Resort Name" name="resortName" value={form.resortName} onChange={handleChange} />
-          <TextField label="Currency" name="currency" value={form.currency} onChange={handleChange} />
+          <TextField
+            select
+            label="Currency"
+            name="currency"
+            value={form.currency}
+            onChange={handleChange}
+          >
+            {currencyOptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
           <TextField label="Timezone" name="timezone" value={form.timezone} onChange={handleChange} />
-          <TextField label="Check-In Time" name="checkInTime" value={form.checkInTime} onChange={handleChange} />
-          <TextField label="Check-Out Time" name="checkOutTime" value={form.checkOutTime} onChange={handleChange} />
           <FormControlLabel control={<Switch checked={form.notifications} onChange={handleChange} name="notifications" />} label="Enable notifications" />
           <FormControlLabel control={<Switch checked={form.autoConfirmations} onChange={handleChange} name="autoConfirmations" />} label="Auto-send confirmations" />
           <Button type="submit" variant="contained" sx={{ alignSelf: 'flex-start' }}>Save Settings</Button>

@@ -35,7 +35,7 @@ export function PublicFooter() {
         background: currentDesign.footerBackground,
       }}
     >
-      <Box sx={{ maxWidth: 1240, mx: 'auto', color: currentDesign.footerText }}>
+      <Box sx={{ maxWidth: 1740, mx: 'auto', color: currentDesign.footerText }}>
         <Box
           sx={{
             display: 'grid',

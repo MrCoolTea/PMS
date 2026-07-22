@@ -3,10 +3,12 @@ import { Box, Button, Paper, Stack, TextField, Typography } from '@mui/material'
 import { useResort } from '../../context/ResortContext.jsx';
 import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
 import { usePublicDesign } from '../../context/PublicDesignContext.jsx';
+import { formatCurrency } from '../../utils/currency.js';
 
 export function BookingPage() {
   const { data } = useResort();
   const { currentDesign, mode } = usePublicDesign();
+  const currency = data.settings?.currency;
   const content = data.siteContent ?? {};
   const [form, setForm] = useState({
     checkIn: '',
@@ -208,7 +210,9 @@ export function BookingPage() {
               {room.type} • Sleeps {room.capacity}
             </Typography>
             <Typography sx={{ mt: 0.75, color: currentDesign.textSecondary }}>{room.amenities}</Typography>
-            <Typography sx={{ mt: 1.5, fontWeight: 700, color: currentDesign.accentStrong }}>${room.rate}/night</Typography>
+            <Typography sx={{ mt: 1.5, fontWeight: 700, color: currentDesign.accentStrong }}>
+              {formatCurrency(room.rate, currency)}/night
+            </Typography>
           </Paper>
         ))}
       </Box>
@@ -256,7 +260,9 @@ export function BookingPage() {
                 </Typography>
               </Box>
               <Stack alignItems="flex-end" spacing={1}>
-                <Typography sx={{ fontWeight: 700, color: currentDesign.textPrimary }}>${room.rate}/night</Typography>
+                <Typography sx={{ fontWeight: 700, color: currentDesign.textPrimary }}>
+                  {formatCurrency(room.rate, currency)}/night
+                </Typography>
                 <Button
                   variant="outlined"
                   sx={{

@@ -319,12 +319,23 @@ export const ui = {
     justifyContent: 'space-between',
   },
   roomCardMain: { display: 'grid', gap: 1.25 },
-  roomCardImage: {
+  roomCardMedia: {
     width: '100%',
-    height: 140,
-    objectFit: 'cover',
+    height: 160,
     borderRadius: 1.75,
     border: '1px solid rgba(20, 55, 44, 0.08)',
+    overflow: 'hidden',
+    background:
+      'linear-gradient(135deg, rgba(233, 244, 237, 0.95), rgba(247, 251, 248, 0.98))',
+    display: 'grid',
+    placeItems: 'center',
+  },
+  roomCardImage: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    objectPosition: 'center',
+    display: 'block',
   },
   roomFormPreview: {
     width: '100%',

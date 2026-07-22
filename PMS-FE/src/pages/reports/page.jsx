@@ -1,9 +1,11 @@
 import { Box, Paper, Stack, Typography } from '@mui/material';
 import { useResort } from '../../context/ResortContext.jsx';
 import { ui } from '../../styles/ui.js';
+import { formatCurrency } from '../../utils/currency.js';
 
 export function ReportsPage() {
   const { data } = useResort();
+  const currency = data.settings?.currency;
 
   const totalRooms = data.rooms.length;
   const occupiedRooms = data.rooms.filter((room) => room.status === 'Occupied').length;
@@ -21,7 +23,7 @@ export function ReportsPage() {
     },
     {
       title: 'Recorded Revenue',
-      value: `$${totalRevenue.toLocaleString()}`,
+      value: formatCurrency(totalRevenue, currency),
       note: 'Front desk and online payments',
     },
     {

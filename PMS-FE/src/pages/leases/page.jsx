@@ -23,6 +23,8 @@ import {
   updateReservation,
 } from '../../lib/reservations.js';
 import { ui } from '../../styles/ui.js';
+import { useResort } from '../../context/ResortContext.jsx';
+import { formatCurrency } from '../../utils/currency.js';
 
 const emptyForm = {
   guest: '',
@@ -57,6 +59,7 @@ function mapReservationToForm(reservation) {
 
 export function ReservationsPage() {
   const { accessToken } = useAuth();
+  const { data } = useResort();
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
@@ -66,6 +69,7 @@ export function ReservationsPage() {
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [deletingReservationId, setDeletingReservationId] = useState(null);
+  const currency = data.settings?.currency;
 
   useEffect(() => {
     let active = true;
@@ -247,7 +251,7 @@ export function ReservationsPage() {
                     {reservation.checkIn} to {reservation.checkOut}
                   </Typography>
                   <Typography sx={ui.rowCopy}>
-                    {reservation.source} • ${Number(reservation.total ?? 0).toLocaleString()}
+                    {reservation.source} • {formatCurrency(reservation.total, currency)}
                   </Typography>
                 </Box>
                 <Stack

@@ -1,4 +1,11 @@
-import { API_BASE_URL } from './auth.js';
+import {
+  API_BASE_URL,
+  getStoredSession,
+  logoutUser,
+  refreshSession,
+} from './auth.js';
+
+let refreshInFlight = null;
 
 async function parseJsonSafely(response) {
   const text = await response.text();
@@ -30,7 +37,7 @@ function extractErrorMessage(payload, fallbackMessage) {
   return fallbackMessage;
 }
 
-export async function apiRequest(path, accessToken, options = {}) {
+async function performRequest(path, accessToken, options = {}) {
   const headers = {
     'Content-Type': 'application/json',
     ...(options.headers ?? {}),
@@ -46,6 +53,38 @@ export async function apiRequest(path, accessToken, options = {}) {
   });
 
   const payload = await parseJsonSafely(response);
+
+  return { response, payload };
+}
+
+async function refreshAccessToken() {
+  const session = getStoredSession();
+
+  if (!session?.refreshToken) {
+    throw new Error('Authentication required');
+  }
+
+  if (!refreshInFlight) {
+    refreshInFlight = refreshSession(session.refreshToken).finally(() => {
+      refreshInFlight = null;
+    });
+  }
+
+  return refreshInFlight;
+}
+
+export async function apiRequest(path, accessToken, options = {}, shouldRetry = true) {
+  const { response, payload } = await performRequest(path, accessToken, options);
+
+  if (response.status === 401 && shouldRetry && accessToken) {
+    try {
+      const session = await refreshAccessToken();
+      return apiRequest(path, session.accessToken, options, false);
+    } catch {
+      logoutUser();
+      throw new Error('Your session has expired. Please log in again.');
+    }
+  }
 
   if (!response.ok) {
     throw new Error(
